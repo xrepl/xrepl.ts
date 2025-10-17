@@ -35,6 +35,21 @@ import {
 } from "./operations/phase2/list-definitions";
 import { format, FormatParams } from "./operations/phase2/format";
 
+// Import Phase 3 operations
+import {
+  compileFile,
+  CompileFileParams,
+} from "./operations/phase3/compile-file";
+import {
+  compileProject,
+  CompileProjectParams,
+} from "./operations/phase3/compile-project";
+import { lint, LintParams } from "./operations/phase3/lint";
+import {
+  bufferAnalysis,
+  BufferAnalysisParams,
+} from "./operations/phase3/buffer-analysis";
+
 // Import types
 import {
   EvalResponse,
@@ -53,6 +68,10 @@ import {
   FindReferencesResponse,
   ListDefinitionsResponse,
   FormatResponse,
+  CompileFileResponse,
+  CompileProjectResponse,
+  LintResponse,
+  BufferAnalysisResponse,
 } from "./types/protocol";
 
 /**
@@ -113,6 +132,18 @@ export interface XReplClient {
   format(
     params: FormatParams
   ): Promise<Result<FormatResponse, OperationError>>;
+
+  // Phase 3: Compilation & Building operations
+  compileFile(
+    params: CompileFileParams
+  ): Promise<Result<CompileFileResponse, OperationError>>;
+  compileProject(
+    params: CompileProjectParams
+  ): Promise<Result<CompileProjectResponse, OperationError>>;
+  lint(params: LintParams): Promise<Result<LintResponse, OperationError>>;
+  bufferAnalysis(
+    params: BufferAnalysisParams
+  ): Promise<Result<BufferAnalysisResponse, OperationError>>;
 }
 
 /**
@@ -402,6 +433,63 @@ export function createClient(
           });
         }
         return format(connectionManager, session, params, token);
+      },
+
+      // Phase 3: Compilation & Building operations
+      async compileFile(
+        params: CompileFileParams
+      ): Promise<Result<CompileFileResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "compile-file",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return compileFile(connectionManager, session, params, token);
+      },
+
+      async compileProject(
+        params: CompileProjectParams
+      ): Promise<Result<CompileProjectResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "compile-project",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return compileProject(connectionManager, session, params, token);
+      },
+
+      async lint(
+        params: LintParams
+      ): Promise<Result<LintResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "lint",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return lint(connectionManager, session, params, token);
+      },
+
+      async bufferAnalysis(
+        params: BufferAnalysisParams
+      ): Promise<Result<BufferAnalysisResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "buffer-analysis",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return bufferAnalysis(connectionManager, session, params, token);
       },
     });
   } catch (error) {

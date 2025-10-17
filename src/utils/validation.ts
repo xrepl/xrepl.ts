@@ -116,3 +116,66 @@ export function validateFormatRequest(params: {
 
   return ok(undefined);
 }
+
+/**
+ * Validate compile-file operation parameters
+ */
+export function validateCompileFileRequest(params: {
+  file: string;
+  content?: string;
+}): Result<void, OperationError> {
+  if (!params.file || typeof params.file !== "string") {
+    return err({
+      type: "validation_error",
+      operation: "compile-file",
+      message: "file parameter must be a non-empty string",
+    });
+  }
+
+  if (params.content !== undefined && typeof params.content !== "string") {
+    return err({
+      type: "validation_error",
+      operation: "compile-file",
+      message: "content parameter must be a string",
+    });
+  }
+
+  return ok(undefined);
+}
+
+/**
+ * Validate lint operation parameters
+ */
+export function validateLintRequest(params: {
+  file?: string;
+  content?: string;
+  code?: string;
+}): Result<void, OperationError> {
+  // At least one of file, content, or code must be provided
+  if (!params.file && !params.content && !params.code) {
+    return err({
+      type: "validation_error",
+      operation: "lint",
+      message: "At least one of file, content, or code must be provided",
+    });
+  }
+
+  return ok(undefined);
+}
+
+/**
+ * Validate buffer-analysis operation parameters
+ */
+export function validateBufferAnalysisRequest(params: {
+  content: string;
+}): Result<void, OperationError> {
+  if (!params.content || typeof params.content !== "string") {
+    return err({
+      type: "validation_error",
+      operation: "buffer-analysis",
+      message: "content parameter must be a non-empty string",
+    });
+  }
+
+  return ok(undefined);
+}

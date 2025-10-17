@@ -27,6 +27,11 @@ TypeScript client library for the xREPL protocol, enabling communication with LF
   - `find-references` - Find all references
   - `list-definitions` - Document symbols
   - `format` - Code formatting
+- ✅ **Phase 3 Operations**: All compilation & building operations implemented
+  - `compile-file` - Compile single files
+  - `compile-project` - Compile entire projects
+  - `lint` - Lint code without compilation
+  - `buffer-analysis` - Analyze code buffers
 
 ## Installation
 
@@ -485,7 +490,7 @@ The library follows a functional, type-safe design:
 
 - ✅ Phase 1: Core REPL operations
 - ✅ Phase 2: Code Intelligence (completion, signature help, documentation)
-- ⏳ Phase 3: Compilation & Building
+- ✅ Phase 3: Compilation & Building (compile, lint, analysis)
 - ⏳ Phase 4: Debugging
 - ⏳ Phase 5: Testing & Refactoring
 - ⏳ Phase 6: BEAM-Specific features

@@ -337,4 +337,117 @@ export interface FormatResponse extends BaseResponse {
   error?: string;
 }
 
-// Additional operation types will be added for phases 3-7 as needed
+// ============================================================================
+// Phase 3: Compilation & Building Operations
+// ============================================================================
+
+/**
+ * Diagnostic information for compilation errors/warnings
+ */
+export interface Diagnostic {
+  severity: "error" | "warning" | "info" | "hint";
+  message: string;
+  file: string;
+  line: number;
+  column?: number;
+  end_line?: number;
+  end_column?: number;
+  code?: string;
+}
+
+/**
+ * Compile-file operation - compile a single file
+ */
+export interface CompileFileRequest extends BaseRequest {
+  op: "compile-file" | "compile_file";
+  session: string;
+  file: string;
+  content?: string; // Optional: file contents (if not provided, server reads from disk)
+  options?: {
+    warnings_as_errors?: boolean;
+    output_dir?: string;
+    include_paths?: string[];
+  };
+}
+
+export interface CompileFileResponse extends BaseResponse {
+  success: boolean;
+  diagnostics?: Diagnostic[];
+  output_file?: string;
+  warnings?: number;
+  errors?: number;
+  compile_time?: number; // milliseconds
+}
+
+/**
+ * Compile-project operation - compile entire project
+ */
+export interface CompileProjectRequest extends BaseRequest {
+  op: "compile-project" | "compile_project";
+  session: string;
+  project_root?: string;
+  options?: {
+    warnings_as_errors?: boolean;
+    parallel?: boolean;
+    clean?: boolean;
+    output_dir?: string;
+  };
+}
+
+export interface CompileProjectResponse extends BaseResponse {
+  success: boolean;
+  diagnostics?: Diagnostic[];
+  files_compiled?: number;
+  warnings?: number;
+  errors?: number;
+  compile_time?: number; // milliseconds
+}
+
+/**
+ * Lint operation - lint code without compilation
+ */
+export interface LintRequest extends BaseRequest {
+  op: "lint";
+  session: string;
+  file?: string;
+  content?: string;
+  code?: string; // Alternative to content
+  options?: {
+    rules?: string[];
+    severity?: "error" | "warning" | "info";
+  };
+}
+
+export interface LintResponse extends BaseResponse {
+  diagnostics: Diagnostic[];
+  warnings?: number;
+  errors?: number;
+  info?: number;
+}
+
+/**
+ * Buffer-analysis operation - analyze code buffer for issues
+ */
+export interface BufferAnalysisRequest extends BaseRequest {
+  op: "buffer-analysis" | "buffer_analysis";
+  session: string;
+  content: string;
+  file?: string;
+  options?: {
+    include_warnings?: boolean;
+    include_style?: boolean;
+  };
+}
+
+export interface BufferAnalysisResponse extends BaseResponse {
+  diagnostics: Diagnostic[];
+  warnings?: number;
+  errors?: number;
+  suggestions?: Array<{
+    message: string;
+    location: Location;
+    fix?: string;
+  }>;
+}
+
+// Additional operation types will be added for phases 4-7 as needed

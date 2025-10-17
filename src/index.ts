@@ -41,3 +41,9 @@ export type { FindDefinitionParams } from "./operations/phase2/find-definition";
 export type { FindReferencesParams } from "./operations/phase2/find-references";
 export type { ListDefinitionsParams } from "./operations/phase2/list-definitions";
 export type { FormatParams } from "./operations/phase2/format";
+
+// Operation parameter types - Phase 3
+export type { CompileFileParams } from "./operations/phase3/compile-file";
+export type { CompileProjectParams } from "./operations/phase3/compile-project";
+export type { LintParams } from "./operations/phase3/lint";
+export type { BufferAnalysisParams } from "./operations/phase3/buffer-analysis";
