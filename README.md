@@ -18,6 +18,15 @@ TypeScript client library for the xREPL protocol, enabling communication with LF
   - `describe` - Server capabilities
   - `interrupt` - Interrupt running evaluations
   - `load-file` - Load and evaluate files
+- ✅ **Phase 2 Operations**: All code intelligence operations implemented
+  - `complete` - Code completion
+  - `signature` - Function signature help
+  - `eldoc` - Expression documentation
+  - `doc` - Full symbol documentation
+  - `find-definition` - Go to definition
+  - `find-references` - Find all references
+  - `list-definitions` - Document symbols
+  - `format` - Code formatting
 
 ## Installation
 
@@ -228,6 +237,151 @@ const result = await client.loadFile({
 });
 ```
 
+### Code Intelligence Operations
+
+#### `complete(params: CompleteParams): Promise<Result<CompleteResponse, OperationError>>`
+
+Get code completion suggestions.
+
+**Example:**
+```typescript
+const result = await client.complete({
+  prefix: "def",
+  context: "(defun hello () ",
+  line: 1,
+  column: 15
+});
+
+result.map(response => {
+  response.completions.forEach(item => {
+    console.log(`${item.candidate} (${item.type})`);
+  });
+});
+```
+
+#### `signature(params: SignatureParams): Promise<Result<SignatureResponse, OperationError>>`
+
+Get function signature help.
+
+**Example:**
+```typescript
+const result = await client.signature({
+  symbol: "map",
+  context: "(map "
+});
+
+result.map(response => {
+  response.signatures.forEach(sig => {
+    console.log(`Signature: ${sig.label}`);
+  });
+});
+```
+
+#### `eldoc(params: EldocParams): Promise<Result<EldocResponse, OperationError>>`
+
+Get expression documentation (eldoc-style).
+
+**Example:**
+```typescript
+const result = await client.eldoc({
+  symbol: "lists:map"
+});
+
+result.map(response => {
+  console.log(`${response.name}: ${response.arglists?.join(", ")}`);
+});
+```
+
+#### `doc(params: DocParams): Promise<Result<DocResponse, OperationError>>`
+
+Get full documentation for a symbol.
+
+**Example:**
+```typescript
+const result = await client.doc({
+  symbol: "lists:map"
+});
+
+result.map(response => {
+  console.log("Documentation:", response.doc);
+  console.log("Arglists:", response.arglists);
+});
+```
+
+#### `findDefinition(params: FindDefinitionParams): Promise<Result<FindDefinitionResponse, OperationError>>`
+
+Find definition location(s) for a symbol (go-to-definition).
+
+**Example:**
+```typescript
+const result = await client.findDefinition({
+  symbol: "my-function"
+});
+
+result.map(response => {
+  response.definitions.forEach(def => {
+    console.log(`Definition at ${def.file}:${def.line}`);
+  });
+});
+```
+
+#### `findReferences(params: FindReferencesParams): Promise<Result<FindReferencesResponse, OperationError>>`
+
+Find all references to a symbol.
+
+**Example:**
+```typescript
+const result = await client.findReferences({
+  symbol: "my-function",
+  includeDeclaration: true
+});
+
+result.map(response => {
+  console.log(`Found ${response.references.length} references`);
+});
+```
+
+#### `listDefinitions(params: ListDefinitionsParams): Promise<Result<ListDefinitionsResponse, OperationError>>`
+
+List all definitions in a file or namespace (document symbols).
+
+**Example:**
+```typescript
+// List definitions in a file
+const result = await client.listDefinitions({
+  file: "/path/to/file.lfe"
+});
+
+// Or by namespace
+const result = await client.listDefinitions({
+  namespace: "my-module"
+});
+
+result.map(response => {
+  response.definitions.forEach(def => {
+    console.log(`${def.type}: ${def.name} at ${def.location.file}:${def.location.line}`);
+  });
+});
+```
+
+#### `format(params: FormatParams): Promise<Result<FormatResponse, OperationError>>`
+
+Format LFE code.
+
+**Example:**
+```typescript
+const result = await client.format({
+  code: "(defun hello()    'world)",
+  file: "buffer.lfe"
+});
+
+result.map(response => {
+  if (response.formatted) {
+    console.log("Formatted:", response.formatted);
+  }
+});
+```
+
 ## Error Handling
 
 This library uses the `neverthrow` library for type-safe error handling. All operations return `Result<T, E>` types instead of throwing exceptions.
@@ -330,7 +484,7 @@ The library follows a functional, type-safe design:
 ## Roadmap
 
 - ✅ Phase 1: Core REPL operations
-- 🚧 Phase 2: Code Intelligence (completion, signature help, documentation)
+- ✅ Phase 2: Code Intelligence (completion, signature help, documentation)
 - ⏳ Phase 3: Compilation & Building
 - ⏳ Phase 4: Debugging
 - ⏳ Phase 5: Testing & Refactoring

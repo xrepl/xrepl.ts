@@ -28,6 +28,16 @@ export type {
 export { TcpConfig } from "./transport/tcp";
 export { UnixSocketConfig } from "./transport/unix";
 
-// Operation parameter types
+// Operation parameter types - Phase 1
 export type { EvalParams } from "./operations/phase1/eval";
 export type { LoadFileParams } from "./operations/phase1/load-file";
+
+// Operation parameter types - Phase 2
+export type { CompleteParams } from "./operations/phase2/complete";
+export type { SignatureParams } from "./operations/phase2/signature";
+export type { EldocParams } from "./operations/phase2/eldoc";
+export type { DocParams } from "./operations/phase2/doc";
+export type { FindDefinitionParams } from "./operations/phase2/find-definition";
+export type { FindReferencesParams } from "./operations/phase2/find-references";
+export type { ListDefinitionsParams } from "./operations/phase2/list-definitions";
+export type { FormatParams } from "./operations/phase2/format";

@@ -16,6 +16,25 @@ import { describe } from "./operations/phase1/describe";
 import { interrupt } from "./operations/phase1/interrupt";
 import { loadFile, LoadFileParams } from "./operations/phase1/load-file";
 
+// Import Phase 2 operations
+import { complete, CompleteParams } from "./operations/phase2/complete";
+import { signature, SignatureParams } from "./operations/phase2/signature";
+import { eldoc, EldocParams } from "./operations/phase2/eldoc";
+import { doc, DocParams } from "./operations/phase2/doc";
+import {
+  findDefinition,
+  FindDefinitionParams,
+} from "./operations/phase2/find-definition";
+import {
+  findReferences,
+  FindReferencesParams,
+} from "./operations/phase2/find-references";
+import {
+  listDefinitions,
+  ListDefinitionsParams,
+} from "./operations/phase2/list-definitions";
+import { format, FormatParams } from "./operations/phase2/format";
+
 // Import types
 import {
   EvalResponse,
@@ -26,6 +45,14 @@ import {
   DescribeResponse,
   InterruptResponse,
   LoadFileResponse,
+  CompleteResponse,
+  SignatureResponse,
+  EldocResponse,
+  DocResponse,
+  FindDefinitionResponse,
+  FindReferencesResponse,
+  ListDefinitionsResponse,
+  FormatResponse,
 } from "./types/protocol";
 
 /**
@@ -64,6 +91,28 @@ export interface XReplClient {
   loadFile(
     params: LoadFileParams
   ): Promise<Result<LoadFileResponse, OperationError>>;
+
+  // Phase 2: Code Intelligence operations
+  complete(
+    params: CompleteParams
+  ): Promise<Result<CompleteResponse, OperationError>>;
+  signature(
+    params: SignatureParams
+  ): Promise<Result<SignatureResponse, OperationError>>;
+  eldoc(params: EldocParams): Promise<Result<EldocResponse, OperationError>>;
+  doc(params: DocParams): Promise<Result<DocResponse, OperationError>>;
+  findDefinition(
+    params: FindDefinitionParams
+  ): Promise<Result<FindDefinitionResponse, OperationError>>;
+  findReferences(
+    params: FindReferencesParams
+  ): Promise<Result<FindReferencesResponse, OperationError>>;
+  listDefinitions(
+    params: ListDefinitionsParams
+  ): Promise<Result<ListDefinitionsResponse, OperationError>>;
+  format(
+    params: FormatParams
+  ): Promise<Result<FormatResponse, OperationError>>;
 }
 
 /**
@@ -240,6 +289,119 @@ export function createClient(
           });
         }
         return loadFile(connectionManager, session, params, token);
+      },
+
+      // Phase 2: Code Intelligence operations
+      async complete(
+        params: CompleteParams
+      ): Promise<Result<CompleteResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "complete",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return complete(connectionManager, session, params, token);
+      },
+
+      async signature(
+        params: SignatureParams
+      ): Promise<Result<SignatureResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "signature",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return signature(connectionManager, session, params, token);
+      },
+
+      async eldoc(
+        params: EldocParams
+      ): Promise<Result<EldocResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "eldoc",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return eldoc(connectionManager, session, params, token);
+      },
+
+      async doc(
+        params: DocParams
+      ): Promise<Result<DocResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "doc",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return doc(connectionManager, session, params, token);
+      },
+
+      async findDefinition(
+        params: FindDefinitionParams
+      ): Promise<Result<FindDefinitionResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "find-definition",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return findDefinition(connectionManager, session, params, token);
+      },
+
+      async findReferences(
+        params: FindReferencesParams
+      ): Promise<Result<FindReferencesResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "find-references",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return findReferences(connectionManager, session, params, token);
+      },
+
+      async listDefinitions(
+        params: ListDefinitionsParams
+      ): Promise<Result<ListDefinitionsResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "list-definitions",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return listDefinitions(connectionManager, session, params, token);
+      },
+
+      async format(
+        params: FormatParams
+      ): Promise<Result<FormatResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "format",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return format(connectionManager, session, params, token);
       },
     });
   } catch (error) {
