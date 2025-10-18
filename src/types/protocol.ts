@@ -731,4 +731,169 @@ export interface InlineFunctionResponse extends BaseResponse {
   occurrences_inlined: number;
 }
 
-// Additional operation types will be added for phases 7-8 as needed
+// ============================================================================
+// Phase 7: BEAM-Specific Operations
+// ============================================================================
+
+/**
+ * Process information for BEAM VM
+ */
+export interface ProcessInfo {
+  pid: string;
+  name?: string;
+  initial_call?: string;
+  current_function?: string;
+  status: string;
+  message_queue_len: number;
+  heap_size?: number;
+  stack_size?: number;
+  reductions?: number;
+}
+
+/**
+ * Hot-reload operation - hot reload code modules
+ */
+export interface HotReloadRequest extends BaseRequest {
+  op: "hot-reload" | "hot_reload";
+  session: string;
+  modules?: string[]; // Optional: specific modules to reload (default: all changed)
+  purge?: boolean; // Purge old code
+}
+
+export interface HotReloadResponse extends BaseResponse {
+  reloaded_modules: string[];
+  errors?: Array<{
+    module: string;
+    error: string;
+  }>;
+}
+
+/**
+ * List-processes operation - list all BEAM processes
+ */
+export interface ListProcessesRequest extends BaseRequest {
+  op: "list-processes" | "list_processes";
+  session: string;
+  filter?: {
+    min_message_queue_len?: number;
+    min_heap_size?: number;
+    status?: string;
+  };
+}
+
+export interface ListProcessesResponse extends BaseResponse {
+  processes: ProcessInfo[];
+  total_processes: number;
+}
+
+/**
+ * Inspect-process operation - inspect a specific BEAM process
+ */
+export interface InspectProcessRequest extends BaseRequest {
+  op: "inspect-process" | "inspect_process";
+  session: string;
+  pid: string;
+  options?: {
+    include_messages?: boolean;
+    include_backtrace?: boolean;
+    include_dictionary?: boolean;
+  };
+}
+
+export interface InspectProcessResponse extends BaseResponse {
+  process: ProcessInfo;
+  messages?: unknown[];
+  backtrace?: string[];
+  dictionary?: Record<string, unknown>;
+}
+
+/**
+ * Trace-calls operation - trace function calls
+ */
+export interface TraceCallsRequest extends BaseRequest {
+  op: "trace-calls" | "trace_calls";
+  session: string;
+  action: "start" | "stop" | "status";
+  module?: string;
+  function?: string;
+  arity?: number;
+  options?: {
+    max_traces?: number;
+    timeout?: number;
+  };
+}
+
+export interface TraceEvent {
+  timestamp: string;
+  pid: string;
+  module: string;
+  function: string;
+  arity: number;
+  args?: unknown[];
+  result?: unknown;
+}
+
+export interface TraceCallsResponse extends BaseResponse {
+  trace_status: "started" | "stopped" | "running";
+  traces?: TraceEvent[];
+  trace_count?: number;
+}
+
+/**
+ * System-info operation - get BEAM system information
+ */
+export interface SystemInfoRequest extends BaseRequest {
+  op: "system-info" | "system_info";
+  session: string;
+  categories?: string[]; // Optional: specific categories (e.g., "memory", "cpu", "processes")
+}
+
+export interface SystemInfoResponse extends BaseResponse {
+  system: {
+    erlang_version?: string;
+    otp_release?: string;
+    erts_version?: string;
+    system_architecture?: string;
+  };
+  memory?: {
+    total: number;
+    processes: number;
+    system: number;
+    atom: number;
+    binary: number;
+    code: number;
+    ets: number;
+  };
+  statistics?: {
+    uptime: number; // seconds
+    run_queue: number;
+    process_count: number;
+    port_count: number;
+    atom_count: number;
+  };
+  scheduler_info?: {
+    schedulers: number;
+    schedulers_online: number;
+  };
+}
+
+/**
+ * Observer-data operation - get data for observer/monitoring tools
+ */
+export interface ObserverDataRequest extends BaseRequest {
+  op: "observer-data" | "observer_data";
+  session: string;
+  data_type: "applications" | "processes" | "ports" | "ets" | "mnesia";
+  options?: {
+    sort_by?: string;
+    limit?: number;
+  };
+}
+
+export interface ObserverDataResponse extends BaseResponse {
+  data_type: string;
+  data: unknown[]; // Type varies based on data_type
+  timestamp: string;
+}
+
+// Additional operation types will be added for phase 8 as needed

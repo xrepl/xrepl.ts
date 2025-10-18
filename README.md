@@ -47,6 +47,13 @@ TypeScript client library for the xREPL protocol, enabling communication with LF
   - `rename-symbol` - Rename symbols across codebase
   - `extract-function` - Extract code into new function
   - `inline-function` - Inline function calls
+- ✅ **Phase 7 Operations**: All BEAM-specific operations implemented
+  - `hot-reload` - Hot reload code modules
+  - `list-processes` - List all BEAM processes
+  - `inspect-process` - Inspect specific BEAM process
+  - `trace-calls` - Trace function calls
+  - `system-info` - Get BEAM system information
+  - `observer-data` - Get data for observer/monitoring tools
 
 ## Installation
 
@@ -651,7 +658,7 @@ The library follows a functional, type-safe design:
 - ✅ Phase 4: CI/CD
 - ✅ Phase 5: Debugging (breakpoints, stepping, inspection)
 - ✅ Phase 6: Testing & Refactoring (test running, coverage, refactoring)
-- ⏳ Phase 7: BEAM-Specific features
+- ✅ Phase 7: BEAM-Specific (hot reload, processes, tracing, system info)
 - ⏳ Phase 8: Advanced features
 
 ## Contributing

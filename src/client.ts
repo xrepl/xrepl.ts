@@ -94,6 +94,23 @@ import {
   InlineFunctionParams,
 } from "./operations/phase6/inline-function";
 
+// Import Phase 7 operations
+import { hotReload, HotReloadParams } from "./operations/phase7/hot-reload";
+import {
+  listProcesses,
+  ListProcessesParams,
+} from "./operations/phase7/list-processes";
+import {
+  inspectProcess,
+  InspectProcessParams,
+} from "./operations/phase7/inspect-process";
+import { traceCalls, TraceCallsParams } from "./operations/phase7/trace-calls";
+import { systemInfo, SystemInfoParams } from "./operations/phase7/system-info";
+import {
+  observerData,
+  ObserverDataParams,
+} from "./operations/phase7/observer-data";
+
 // Import types
 import {
   EvalResponse,
@@ -129,6 +146,12 @@ import {
   RenameSymbolResponse,
   ExtractFunctionResponse,
   InlineFunctionResponse,
+  HotReloadResponse,
+  ListProcessesResponse,
+  InspectProcessResponse,
+  TraceCallsResponse,
+  SystemInfoResponse,
+  ObserverDataResponse,
 } from "./types/protocol";
 
 /**
@@ -240,6 +263,26 @@ export interface XReplClient {
   inlineFunction(
     params: InlineFunctionParams
   ): Promise<Result<InlineFunctionResponse, OperationError>>;
+
+  // Phase 7: BEAM-Specific operations
+  hotReload(
+    params: HotReloadParams
+  ): Promise<Result<HotReloadResponse, OperationError>>;
+  listProcesses(
+    params: ListProcessesParams
+  ): Promise<Result<ListProcessesResponse, OperationError>>;
+  inspectProcess(
+    params: InspectProcessParams
+  ): Promise<Result<InspectProcessResponse, OperationError>>;
+  traceCalls(
+    params: TraceCallsParams
+  ): Promise<Result<TraceCallsResponse, OperationError>>;
+  systemInfo(
+    params: SystemInfoParams
+  ): Promise<Result<SystemInfoResponse, OperationError>>;
+  observerData(
+    params: ObserverDataParams
+  ): Promise<Result<ObserverDataResponse, OperationError>>;
 }
 
 /**
@@ -770,6 +813,91 @@ export function createClient(
           });
         }
         return inlineFunction(connectionManager, session, params, token);
+      },
+
+      // Phase 7: BEAM-Specific operations
+      async hotReload(
+        params: HotReloadParams
+      ): Promise<Result<HotReloadResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "hot-reload",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return hotReload(connectionManager, session, params, token);
+      },
+
+      async listProcesses(
+        params: ListProcessesParams
+      ): Promise<Result<ListProcessesResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "list-processes",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return listProcesses(connectionManager, session, params, token);
+      },
+
+      async inspectProcess(
+        params: InspectProcessParams
+      ): Promise<Result<InspectProcessResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "inspect-process",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return inspectProcess(connectionManager, session, params, token);
+      },
+
+      async traceCalls(
+        params: TraceCallsParams
+      ): Promise<Result<TraceCallsResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "trace-calls",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return traceCalls(connectionManager, session, params, token);
+      },
+
+      async systemInfo(
+        params: SystemInfoParams
+      ): Promise<Result<SystemInfoResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "system-info",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return systemInfo(connectionManager, session, params, token);
+      },
+
+      async observerData(
+        params: ObserverDataParams
+      ): Promise<Result<ObserverDataResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "observer-data",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return observerData(connectionManager, session, params, token);
       },
     });
   } catch (error) {

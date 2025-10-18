@@ -63,3 +63,11 @@ export type { TestRerunFailuresParams } from "./operations/phase6/test-rerun-fai
 export type { RenameSymbolParams } from "./operations/phase6/rename-symbol";
 export type { ExtractFunctionParams } from "./operations/phase6/extract-function";
 export type { InlineFunctionParams } from "./operations/phase6/inline-function";
+
+// Operation parameter types - Phase 7
+export type { HotReloadParams } from "./operations/phase7/hot-reload";
+export type { ListProcessesParams } from "./operations/phase7/list-processes";
+export type { InspectProcessParams } from "./operations/phase7/inspect-process";
+export type { TraceCallsParams } from "./operations/phase7/trace-calls";
+export type { SystemInfoParams } from "./operations/phase7/system-info";
+export type { ObserverDataParams } from "./operations/phase7/observer-data";
