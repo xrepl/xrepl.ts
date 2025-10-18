@@ -111,6 +111,50 @@ import {
   ObserverDataParams,
 } from "./operations/phase7/observer-data";
 
+// Import Phase 8 operations
+import {
+  macroexpand,
+  MacroexpandParams,
+} from "./operations/phase8/macroexpand";
+import {
+  macroexpandAll,
+  MacroexpandAllParams,
+} from "./operations/phase8/macroexpand-all";
+import {
+  profileStart,
+  ProfileStartParams,
+} from "./operations/phase8/profile-start";
+import {
+  profileStop,
+  ProfileStopParams,
+} from "./operations/phase8/profile-stop";
+import { benchmark, BenchmarkParams } from "./operations/phase8/benchmark";
+import {
+  workspaceSymbols,
+  WorkspaceSymbolsParams,
+} from "./operations/phase8/workspace-symbols";
+import {
+  generateFunction,
+  GenerateFunctionParams,
+} from "./operations/phase8/generate-function";
+import {
+  generateTests,
+  GenerateTestsParams,
+} from "./operations/phase8/generate-tests";
+import {
+  suggestImprovements,
+  SuggestImprovementsParams,
+} from "./operations/phase8/suggest-improvements";
+import { snippets, SnippetsParams } from "./operations/phase8/snippets";
+import {
+  shareSession,
+  ShareSessionParams,
+} from "./operations/phase8/share-session";
+import {
+  restoreSession,
+  RestoreSessionParams,
+} from "./operations/phase8/restore-session";
+
 // Import types
 import {
   EvalResponse,
@@ -152,6 +196,18 @@ import {
   TraceCallsResponse,
   SystemInfoResponse,
   ObserverDataResponse,
+  MacroexpandResponse,
+  MacroexpandAllResponse,
+  ProfileStartResponse,
+  ProfileStopResponse,
+  BenchmarkResponse,
+  WorkspaceSymbolsResponse,
+  GenerateFunctionResponse,
+  GenerateTestsResponse,
+  SuggestImprovementsResponse,
+  SnippetsResponse,
+  ShareSessionResponse,
+  RestoreSessionResponse,
 } from "./types/protocol";
 
 /**
@@ -283,6 +339,44 @@ export interface XReplClient {
   observerData(
     params: ObserverDataParams
   ): Promise<Result<ObserverDataResponse, OperationError>>;
+
+  // Phase 8: Advanced Features
+  macroexpand(
+    params: MacroexpandParams
+  ): Promise<Result<MacroexpandResponse, OperationError>>;
+  macroexpandAll(
+    params: MacroexpandAllParams
+  ): Promise<Result<MacroexpandAllResponse, OperationError>>;
+  profileStart(
+    params: ProfileStartParams
+  ): Promise<Result<ProfileStartResponse, OperationError>>;
+  profileStop(
+    params: ProfileStopParams
+  ): Promise<Result<ProfileStopResponse, OperationError>>;
+  benchmark(
+    params: BenchmarkParams
+  ): Promise<Result<BenchmarkResponse, OperationError>>;
+  workspaceSymbols(
+    params: WorkspaceSymbolsParams
+  ): Promise<Result<WorkspaceSymbolsResponse, OperationError>>;
+  generateFunction(
+    params: GenerateFunctionParams
+  ): Promise<Result<GenerateFunctionResponse, OperationError>>;
+  generateTests(
+    params: GenerateTestsParams
+  ): Promise<Result<GenerateTestsResponse, OperationError>>;
+  suggestImprovements(
+    params: SuggestImprovementsParams
+  ): Promise<Result<SuggestImprovementsResponse, OperationError>>;
+  snippets(
+    params: SnippetsParams
+  ): Promise<Result<SnippetsResponse, OperationError>>;
+  shareSession(
+    params: ShareSessionParams
+  ): Promise<Result<ShareSessionResponse, OperationError>>;
+  restoreSession(
+    params: RestoreSessionParams
+  ): Promise<Result<RestoreSessionResponse, OperationError>>;
 }
 
 /**
@@ -898,6 +992,175 @@ export function createClient(
           });
         }
         return observerData(connectionManager, session, params, token);
+      },
+
+      // Phase 8: Advanced Features
+      async macroexpand(
+        params: MacroexpandParams
+      ): Promise<Result<MacroexpandResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "macroexpand",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return macroexpand(connectionManager, session, params, token);
+      },
+
+      async macroexpandAll(
+        params: MacroexpandAllParams
+      ): Promise<Result<MacroexpandAllResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "macroexpand-all",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return macroexpandAll(connectionManager, session, params, token);
+      },
+
+      async profileStart(
+        params: ProfileStartParams
+      ): Promise<Result<ProfileStartResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "profile-start",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return profileStart(connectionManager, session, params, token);
+      },
+
+      async profileStop(
+        params: ProfileStopParams
+      ): Promise<Result<ProfileStopResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "profile-stop",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return profileStop(connectionManager, session, params, token);
+      },
+
+      async benchmark(
+        params: BenchmarkParams
+      ): Promise<Result<BenchmarkResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "benchmark",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return benchmark(connectionManager, session, params, token);
+      },
+
+      async workspaceSymbols(
+        params: WorkspaceSymbolsParams
+      ): Promise<Result<WorkspaceSymbolsResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "workspace-symbols",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return workspaceSymbols(connectionManager, session, params, token);
+      },
+
+      async generateFunction(
+        params: GenerateFunctionParams
+      ): Promise<Result<GenerateFunctionResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "generate-function",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return generateFunction(connectionManager, session, params, token);
+      },
+
+      async generateTests(
+        params: GenerateTestsParams
+      ): Promise<Result<GenerateTestsResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "generate-tests",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return generateTests(connectionManager, session, params, token);
+      },
+
+      async suggestImprovements(
+        params: SuggestImprovementsParams
+      ): Promise<Result<SuggestImprovementsResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "suggest-improvements",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return suggestImprovements(connectionManager, session, params, token);
+      },
+
+      async snippets(
+        params: SnippetsParams
+      ): Promise<Result<SnippetsResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "snippets",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return snippets(connectionManager, session, params, token);
+      },
+
+      async shareSession(
+        params: ShareSessionParams
+      ): Promise<Result<ShareSessionResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "share-session",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return shareSession(connectionManager, session, params, token);
+      },
+
+      async restoreSession(
+        params: RestoreSessionParams
+      ): Promise<Result<RestoreSessionResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "restore-session",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return restoreSession(connectionManager, session, params, token);
       },
     });
   } catch (error) {

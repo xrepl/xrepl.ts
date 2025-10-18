@@ -71,3 +71,17 @@ export type { InspectProcessParams } from "./operations/phase7/inspect-process";
 export type { TraceCallsParams } from "./operations/phase7/trace-calls";
 export type { SystemInfoParams } from "./operations/phase7/system-info";
 export type { ObserverDataParams } from "./operations/phase7/observer-data";
+
+// Operation parameter types - Phase 8
+export type { MacroexpandParams } from "./operations/phase8/macroexpand";
+export type { MacroexpandAllParams } from "./operations/phase8/macroexpand-all";
+export type { ProfileStartParams } from "./operations/phase8/profile-start";
+export type { ProfileStopParams } from "./operations/phase8/profile-stop";
+export type { BenchmarkParams } from "./operations/phase8/benchmark";
+export type { WorkspaceSymbolsParams } from "./operations/phase8/workspace-symbols";
+export type { GenerateFunctionParams } from "./operations/phase8/generate-function";
+export type { GenerateTestsParams } from "./operations/phase8/generate-tests";
+export type { SuggestImprovementsParams } from "./operations/phase8/suggest-improvements";
+export type { SnippetsParams } from "./operations/phase8/snippets";
+export type { ShareSessionParams } from "./operations/phase8/share-session";
+export type { RestoreSessionParams } from "./operations/phase8/restore-session";

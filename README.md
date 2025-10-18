@@ -54,6 +54,19 @@ TypeScript client library for the xREPL protocol, enabling communication with LF
   - `trace-calls` - Trace function calls
   - `system-info` - Get BEAM system information
   - `observer-data` - Get data for observer/monitoring tools
+- ✅ **Phase 8 Operations**: All advanced features implemented
+  - `macroexpand` - Expand macros in code
+  - `macroexpand-all` - Expand all macros recursively
+  - `profile-start` - Start profiling
+  - `profile-stop` - Stop profiling and get results
+  - `benchmark` - Benchmark code execution
+  - `workspace-symbols` - Search symbols across workspace
+  - `generate-function` - AI-powered function generation
+  - `generate-tests` - AI-powered test case generation
+  - `suggest-improvements` - AI-powered code improvement suggestions
+  - `snippets` - Retrieve code snippets and templates
+  - `share-session` - Share sessions for collaboration
+  - `restore-session` - Restore shared sessions
 
 ## Installation
 
@@ -659,7 +672,7 @@ The library follows a functional, type-safe design:
 - ✅ Phase 5: Debugging (breakpoints, stepping, inspection)
 - ✅ Phase 6: Testing & Refactoring (test running, coverage, refactoring)
 - ✅ Phase 7: BEAM-Specific (hot reload, processes, tracing, system info)
-- ⏳ Phase 8: Advanced features
+- ✅ Phase 8: Advanced Features (macroexpansion, profiling, benchmarking)
 
 ## Contributing
 

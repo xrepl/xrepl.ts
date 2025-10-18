@@ -896,4 +896,256 @@ export interface ObserverDataResponse extends BaseResponse {
   timestamp: string;
 }
 
-// Additional operation types will be added for phase 8 as needed
+// ============================================================================
+// Phase 8: Advanced Features
+// ============================================================================
+
+/**
+ * Macroexpand operation - expand macros in code
+ */
+export interface MacroexpandRequest extends BaseRequest {
+  op: "macroexpand" | "macro-expand";
+  session: string;
+  code: string;
+  expand_all?: boolean; // Expand all levels or just one
+}
+
+export interface MacroexpandResponse extends BaseResponse {
+  expanded: string;
+  original: string;
+}
+
+/**
+ * Macroexpand-all operation - expand all macros recursively
+ */
+export interface MacroexpandAllRequest extends BaseRequest {
+  op: "macroexpand-all" | "macroexpand_all" | "macro-expand-all";
+  session: string;
+  code: string;
+}
+
+export interface MacroexpandAllResponse extends BaseResponse {
+  expanded: string;
+  original: string;
+  expansion_depth: number;
+}
+
+/**
+ * Profile-start operation - start profiling
+ */
+export interface ProfileStartRequest extends BaseRequest {
+  op: "profile-start" | "profile_start";
+  session: string;
+  options?: {
+    modules?: string[];
+    functions?: string[];
+    sample_rate?: number;
+  };
+}
+
+export interface ProfileStartResponse extends BaseResponse {
+  profile_id: string;
+  profiling_started: boolean;
+}
+
+/**
+ * Profile-stop operation - stop profiling and get results
+ */
+export interface ProfileStopRequest extends BaseRequest {
+  op: "profile-stop" | "profile_stop";
+  session: string;
+  profile_id?: string;
+}
+
+export interface ProfileResult {
+  function: string;
+  module: string;
+  calls: number;
+  time_us: number; // microseconds
+  percentage: number;
+}
+
+export interface ProfileStopResponse extends BaseResponse {
+  profile_id?: string;
+  results: ProfileResult[];
+  total_time_us: number;
+  total_calls: number;
+}
+
+/**
+ * Benchmark operation - benchmark code execution
+ */
+export interface BenchmarkRequest extends BaseRequest {
+  op: "benchmark";
+  session: string;
+  code: string;
+  iterations?: number;
+  warmup?: number;
+}
+
+export interface BenchmarkResponse extends BaseResponse {
+  iterations: number;
+  mean_time_us: number;
+  median_time_us: number;
+  min_time_us: number;
+  max_time_us: number;
+  std_dev_us: number;
+  total_time_us: number;
+}
+
+/**
+ * Workspace-symbols operation - search for symbols across workspace
+ */
+export interface WorkspaceSymbolsRequest extends BaseRequest {
+  op: "workspace-symbols" | "workspace_symbols";
+  session: string;
+  query?: string; // Optional search query
+  kind?: string; // Optional: filter by symbol kind
+}
+
+export interface SymbolInfo {
+  name: string;
+  kind: string; // "function", "macro", "record", "type", etc.
+  location: Location;
+  container?: string; // Containing module/namespace
+}
+
+export interface WorkspaceSymbolsResponse extends BaseResponse {
+  symbols: SymbolInfo[];
+  total: number;
+}
+
+/**
+ * Generate-function operation - AI-generated function code
+ */
+export interface GenerateFunctionRequest extends BaseRequest {
+  op: "generate-function" | "generate_function";
+  session: string;
+  description: string;
+  name?: string;
+  params?: Array<{ name: string; type?: string; description?: string }>;
+  return_type?: string;
+  examples?: string[];
+}
+
+export interface GenerateFunctionResponse extends BaseResponse {
+  code: string;
+  documentation?: string;
+  tests?: string;
+  confidence?: number; // 0-100
+}
+
+/**
+ * Generate-tests operation - AI-generated test cases
+ */
+export interface GenerateTestsRequest extends BaseRequest {
+  op: "generate-tests" | "generate_tests";
+  session: string;
+  code: string;
+  function_name?: string;
+  framework?: string;
+  count?: number;
+  include_edge_cases?: boolean;
+}
+
+export interface TestCase {
+  name: string;
+  code: string;
+  description?: string;
+  category?: string; // "basic", "edge-case", "error-handling", etc.
+}
+
+export interface GenerateTestsResponse extends BaseResponse {
+  tests: TestCase[];
+  test_count: number;
+  framework?: string;
+}
+
+/**
+ * Suggest-improvements operation - AI-powered code improvement suggestions
+ */
+export interface SuggestImprovementsRequest extends BaseRequest {
+  op: "suggest-improvements" | "suggest_improvements";
+  session: string;
+  code: string;
+  file?: string;
+  focus?: string[]; // "performance", "readability", "style", "security", "best-practices"
+  max_suggestions?: number;
+}
+
+export interface Suggestion {
+  category: string; // "performance", "readability", "style", "security", "best-practices"
+  description: string;
+  original_code?: string;
+  suggested_code?: string;
+  rationale?: string;
+  severity?: "info" | "warning" | "critical";
+}
+
+export interface SuggestImprovementsResponse extends BaseResponse {
+  suggestions: Suggestion[];
+  total: number;
+}
+
+/**
+ * Snippets operation - retrieve code snippets and templates
+ */
+export interface SnippetsRequest extends BaseRequest {
+  op: "snippets";
+  session: string;
+  query?: string;
+  category?: string;
+  tags?: string[];
+  limit?: number;
+}
+
+export interface Snippet {
+  name: string;
+  description: string;
+  code: string;
+  category?: string;
+  tags?: string[];
+  placeholders?: Array<{ name: string; default?: string }>;
+}
+
+export interface SnippetsResponse extends BaseResponse {
+  snippets: Snippet[];
+  total: number;
+}
+
+/**
+ * Share-session operation - share a session for collaboration
+ */
+export interface ShareSessionRequest extends BaseRequest {
+  op: "share-session" | "share_session";
+  session: string;
+  include_history?: boolean;
+  include_bindings?: boolean;
+  expiration?: number; // seconds
+  label?: string;
+}
+
+export interface ShareSessionResponse extends BaseResponse {
+  share_id: string;
+  access_token?: string;
+  expires_at?: string; // ISO 8601 timestamp
+  url?: string; // Optional shareable URL
+}
+
+/**
+ * Restore-session operation - restore a shared session
+ */
+export interface RestoreSessionRequest extends BaseRequest {
+  op: "restore-session" | "restore_session";
+  session: string;
+  share_id: string;
+  access_token?: string;
+  new_session?: boolean;
+}
+
+export interface RestoreSessionResponse extends BaseResponse {
+  session: string;
+  history?: string[]; // Restored history entries
+  bindings_count?: number;
+  restored_at: string; // ISO 8601 timestamp
+}
