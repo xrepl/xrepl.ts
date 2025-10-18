@@ -1,6 +1,6 @@
 {
     "name": "@xrepl/client",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "TypeScript client library for xREPL protocol",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -33,6 +33,9 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/xrepl/xrepl.ts.git"
+    },
+    "publishConfig": {
+        "access": "public"
     },
     "dependencies": {
         "@msgpack/msgpack": "^3.0.0",
