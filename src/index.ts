@@ -85,3 +85,18 @@ export type { SuggestImprovementsParams } from "./operations/phase8/suggest-impr
 export type { SnippetsParams } from "./operations/phase8/snippets";
 export type { ShareSessionParams } from "./operations/phase8/share-session";
 export type { RestoreSessionParams } from "./operations/phase8/restore-session";
+
+// Operation parameter types - Phase 9
+export type { SwitchNamespaceParams } from "./operations/phase9/switch-namespace";
+export type { SessionInfoParams } from "./operations/phase9/session-info";
+export type { UploadHistoryParams } from "./operations/phase9/upload-history";
+export type { TypeInfoParams } from "./operations/phase9/type-info";
+export type { AproposParams } from "./operations/phase9/apropos";
+export type { SymbolAtPointParams } from "./operations/phase9/symbol-at-point";
+export type { DependenciesParams } from "./operations/phase9/dependencies";
+export type { BuildParams } from "./operations/phase9/build";
+export type { EvalMultipleParams } from "./operations/phase9/eval-multiple";
+export type { CancelParams } from "./operations/phase9/cancel";
+export type { CapabilitiesParams } from "./operations/phase9/capabilities";
+export type { VersionParams } from "./operations/phase9/version";
+export type { LoadedModulesParams } from "./operations/phase9/loaded-modules";

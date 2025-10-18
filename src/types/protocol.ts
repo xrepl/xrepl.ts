@@ -1149,3 +1149,244 @@ export interface RestoreSessionResponse extends BaseResponse {
   bindings_count?: number;
   restored_at: string; // ISO 8601 timestamp
 }
+
+// ============================================================================
+// Phase 9: MUST HAVE - Essential Operations
+// ============================================================================
+
+/**
+ * Switch-namespace operation - change module/namespace context
+ */
+export interface SwitchNamespaceRequest extends BaseRequest {
+  op: "switch_namespace" | "switch-namespace";
+  session: string;
+  namespace: string; // Module name
+}
+
+export interface SwitchNamespaceResponse extends BaseResponse {
+  namespace: string; // Confirmed new namespace
+}
+
+/**
+ * Session-info operation - get detailed session information
+ */
+export interface SessionInfoRequest extends BaseRequest {
+  op: "session_info" | "session-info";
+  session: string;
+}
+
+export interface SessionInfoResponse extends BaseResponse {
+  session_data: {
+    id: string;
+    created: string;
+    last_active: string;
+    namespace: string;
+    bindings: Record<string, string>; // Variable bindings
+    loaded_modules: string[];
+  };
+}
+
+/**
+ * Upload-history operation - sync client history to server
+ */
+export interface UploadHistoryRequest extends BaseRequest {
+  op: "upload_history" | "upload-history";
+  session: string;
+  history?: string[]; // Emacs style
+  commands?: string[]; // VSCode style (alias)
+}
+
+export interface UploadHistoryResponse extends BaseResponse {
+  uploaded?: number;
+}
+
+/**
+ * Type-info operation - get type information
+ */
+export interface TypeInfoRequest extends BaseRequest {
+  op: "type_info" | "type-info";
+  session: string;
+  symbol: string;
+}
+
+export interface TypeInfoResponse extends BaseResponse {
+  type_spec: string;
+  argument_types: string[];
+  return_type: string;
+}
+
+/**
+ * Apropos operation - search symbols
+ */
+export interface AproposRequest extends BaseRequest {
+  op: "apropos";
+  session: string;
+  query: string;
+  search_docs?: boolean;
+  search_private?: boolean;
+}
+
+export interface AproposResult {
+  name: string;
+  type: string;
+  arity?: number;
+  module: string;
+  doc: string;
+}
+
+export interface AproposResponse extends BaseResponse {
+  results: AproposResult[];
+}
+
+/**
+ * Symbol-at-point operation - get symbol information at location
+ */
+export interface SymbolAtPointRequest extends BaseRequest {
+  op: "symbol_at_point" | "symbol-at-point";
+  session: string;
+  file: string;
+  line: number;
+  column: number;
+  contents?: string;
+}
+
+export interface SymbolAtPointResponse extends BaseResponse {
+  symbol: string;
+  type: string;
+  module: string;
+  arity?: number;
+  local: boolean;
+  definition_location?: {
+    file: string;
+    line: number;
+  };
+}
+
+/**
+ * Dependencies operation - list project dependencies
+ */
+export interface DependenciesRequest extends BaseRequest {
+  op: "dependencies";
+  session: string;
+  project_root: string;
+}
+
+export interface Dependency {
+  name: string;
+  version: string;
+  type: "required" | "test" | "dev";
+}
+
+export interface DependenciesResponse extends BaseResponse {
+  dependencies: Dependency[];
+}
+
+/**
+ * Build operation - execute project build
+ */
+export interface BuildRequest extends BaseRequest {
+  op: "build";
+  session: string;
+  project_root: string;
+  target: "compile" | "test" | "release" | string;
+}
+
+export interface BuildResponse extends BaseResponse {
+  success: boolean;
+  output: string;
+  duration_ms: number;
+}
+
+/**
+ * Eval-multiple operation - evaluate multiple forms
+ */
+export interface EvalMultipleRequest extends BaseRequest {
+  op: "eval_multiple" | "eval-multiple";
+  session: string;
+  forms: string[]; // Array of code strings
+}
+
+export interface EvalResult {
+  value: string;
+  status: "ok" | "error";
+  error?: string;
+}
+
+export interface EvalMultipleResponse extends BaseResponse {
+  results: EvalResult[];
+}
+
+/**
+ * Cancel operation - cancel running operation
+ */
+export interface CancelRequest extends BaseRequest {
+  op: "cancel";
+  cancel_id: string; // ID of operation to cancel
+}
+
+export interface CancelResponse extends BaseResponse {
+  cancelled: boolean;
+  target_id: string;
+}
+
+/**
+ * Capabilities operation - get server capabilities
+ */
+export interface CapabilitiesRequest extends BaseRequest {
+  op: "capabilities";
+}
+
+export interface OperationCapability {
+  name: string;
+  description: string;
+  required_fields: string[];
+  optional_fields: string[];
+}
+
+export interface ServerFeatures {
+  hot_reload: boolean;
+  debugging: boolean;
+  macroexpansion: boolean;
+  testing: boolean;
+}
+
+export interface CapabilitiesResponse extends BaseResponse {
+  capabilities: {
+    ops: OperationCapability[];
+    features: ServerFeatures;
+  };
+}
+
+/**
+ * Version operation - get version information
+ */
+export interface VersionRequest extends BaseRequest {
+  op: "version";
+}
+
+export interface VersionResponse extends BaseResponse {
+  versions: {
+    xrepl: string;
+    lfe: string;
+    erlang: string;
+    protocol: string;
+  };
+}
+
+/**
+ * Loaded-modules operation - list loaded modules
+ */
+export interface LoadedModulesRequest extends BaseRequest {
+  op: "loaded_modules" | "loaded-modules";
+  session: string;
+}
+
+export interface LoadedModule {
+  name: string;
+  path: string;
+  exports: number;
+}
+
+export interface LoadedModulesResponse extends BaseResponse {
+  modules: LoadedModule[];
+}

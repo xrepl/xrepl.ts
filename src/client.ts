@@ -155,6 +155,45 @@ import {
   RestoreSessionParams,
 } from "./operations/phase8/restore-session";
 
+// Import Phase 9 operations
+import {
+  switchNamespace,
+  SwitchNamespaceParams,
+} from "./operations/phase9/switch-namespace";
+import {
+  sessionInfo,
+  SessionInfoParams,
+} from "./operations/phase9/session-info";
+import {
+  uploadHistory,
+  UploadHistoryParams,
+} from "./operations/phase9/upload-history";
+import { typeInfo, TypeInfoParams } from "./operations/phase9/type-info";
+import { apropos, AproposParams } from "./operations/phase9/apropos";
+import {
+  symbolAtPoint,
+  SymbolAtPointParams,
+} from "./operations/phase9/symbol-at-point";
+import {
+  dependencies,
+  DependenciesParams,
+} from "./operations/phase9/dependencies";
+import { build, BuildParams } from "./operations/phase9/build";
+import {
+  evalMultiple,
+  EvalMultipleParams,
+} from "./operations/phase9/eval-multiple";
+import { cancel, CancelParams } from "./operations/phase9/cancel";
+import {
+  capabilities,
+  CapabilitiesParams,
+} from "./operations/phase9/capabilities";
+import { version, VersionParams } from "./operations/phase9/version";
+import {
+  loadedModules,
+  LoadedModulesParams,
+} from "./operations/phase9/loaded-modules";
+
 // Import types
 import {
   EvalResponse,
@@ -208,6 +247,19 @@ import {
   SnippetsResponse,
   ShareSessionResponse,
   RestoreSessionResponse,
+  SwitchNamespaceResponse,
+  SessionInfoResponse,
+  UploadHistoryResponse,
+  TypeInfoResponse,
+  AproposResponse,
+  SymbolAtPointResponse,
+  DependenciesResponse,
+  BuildResponse,
+  EvalMultipleResponse,
+  CancelResponse,
+  CapabilitiesResponse,
+  VersionResponse,
+  LoadedModulesResponse,
 } from "./types/protocol";
 
 /**
@@ -377,6 +429,47 @@ export interface XReplClient {
   restoreSession(
     params: RestoreSessionParams
   ): Promise<Result<RestoreSessionResponse, OperationError>>;
+
+  // Phase 9: MUST HAVE - Essential Operations
+  switchNamespace(
+    params: SwitchNamespaceParams
+  ): Promise<Result<SwitchNamespaceResponse, OperationError>>;
+  sessionInfo(
+    params: SessionInfoParams
+  ): Promise<Result<SessionInfoResponse, OperationError>>;
+  uploadHistory(
+    params: UploadHistoryParams
+  ): Promise<Result<UploadHistoryResponse, OperationError>>;
+  typeInfo(
+    params: TypeInfoParams
+  ): Promise<Result<TypeInfoResponse, OperationError>>;
+  apropos(
+    params: AproposParams
+  ): Promise<Result<AproposResponse, OperationError>>;
+  symbolAtPoint(
+    params: SymbolAtPointParams
+  ): Promise<Result<SymbolAtPointResponse, OperationError>>;
+  dependencies(
+    params: DependenciesParams
+  ): Promise<Result<DependenciesResponse, OperationError>>;
+  build(
+    params: BuildParams
+  ): Promise<Result<BuildResponse, OperationError>>;
+  evalMultiple(
+    params: EvalMultipleParams
+  ): Promise<Result<EvalMultipleResponse, OperationError>>;
+  cancel(
+    params: CancelParams
+  ): Promise<Result<CancelResponse, OperationError>>;
+  capabilities(
+    params: CapabilitiesParams
+  ): Promise<Result<CapabilitiesResponse, OperationError>>;
+  version(
+    params: VersionParams
+  ): Promise<Result<VersionResponse, OperationError>>;
+  loadedModules(
+    params: LoadedModulesParams
+  ): Promise<Result<LoadedModulesResponse, OperationError>>;
 }
 
 /**
@@ -1161,6 +1254,168 @@ export function createClient(
           });
         }
         return restoreSession(connectionManager, session, params, token);
+      },
+
+      // Phase 9: MUST HAVE - Essential Operations
+      async switchNamespace(
+        params: SwitchNamespaceParams
+      ): Promise<Result<SwitchNamespaceResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "switch-namespace",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return switchNamespace(connectionManager, session, params, token);
+      },
+
+      async sessionInfo(
+        params: SessionInfoParams
+      ): Promise<Result<SessionInfoResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "session-info",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return sessionInfo(connectionManager, session, params, token);
+      },
+
+      async uploadHistory(
+        params: UploadHistoryParams
+      ): Promise<Result<UploadHistoryResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "upload-history",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return uploadHistory(connectionManager, session, params, token);
+      },
+
+      async typeInfo(
+        params: TypeInfoParams
+      ): Promise<Result<TypeInfoResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "type-info",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return typeInfo(connectionManager, session, params, token);
+      },
+
+      async apropos(
+        params: AproposParams
+      ): Promise<Result<AproposResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "apropos",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return apropos(connectionManager, session, params, token);
+      },
+
+      async symbolAtPoint(
+        params: SymbolAtPointParams
+      ): Promise<Result<SymbolAtPointResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "symbol-at-point",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return symbolAtPoint(connectionManager, session, params, token);
+      },
+
+      async dependencies(
+        params: DependenciesParams
+      ): Promise<Result<DependenciesResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "dependencies",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return dependencies(connectionManager, session, params, token);
+      },
+
+      async build(
+        params: BuildParams
+      ): Promise<Result<BuildResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "build",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return build(connectionManager, session, params, token);
+      },
+
+      async evalMultiple(
+        params: EvalMultipleParams
+      ): Promise<Result<EvalMultipleResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "eval-multiple",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return evalMultiple(connectionManager, session, params, token);
+      },
+
+      async cancel(
+        params: CancelParams
+      ): Promise<Result<CancelResponse, OperationError>> {
+        // Note: cancel doesn't require a session since it operates on request IDs
+        return cancel(connectionManager, "", params, token);
+      },
+
+      async capabilities(
+        params: CapabilitiesParams
+      ): Promise<Result<CapabilitiesResponse, OperationError>> {
+        // Note: capabilities is a global query, doesn't require a session
+        return capabilities(connectionManager, params, token);
+      },
+
+      async version(
+        params: VersionParams
+      ): Promise<Result<VersionResponse, OperationError>> {
+        // Note: version is a global query, doesn't require a session
+        return version(connectionManager, params, token);
+      },
+
+      async loadedModules(
+        params: LoadedModulesParams
+      ): Promise<Result<LoadedModulesResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "loaded-modules",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return loadedModules(connectionManager, session, params, token);
       },
     });
   } catch (error) {
