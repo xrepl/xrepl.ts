@@ -570,4 +570,165 @@ export interface EvalInFrameResponse extends BaseResponse {
   frame_id?: number;
 }
 
-// Additional operation types will be added for phases 6-8 as needed
+// ============================================================================
+// Phase 6: Testing & Refactoring Operations
+// ============================================================================
+
+/**
+ * Test result information
+ */
+export interface TestResult {
+  name: string;
+  status: "pass" | "fail" | "skip" | "error";
+  duration?: number; // milliseconds
+  error?: string;
+  error_type?: string;
+  stacktrace?: StackFrame[];
+}
+
+/**
+ * Test-run operation - run tests
+ */
+export interface TestRunRequest extends BaseRequest {
+  op: "test-run" | "test_run";
+  session: string;
+  namespace?: string; // Optional: specific namespace to test
+  test?: string; // Optional: specific test to run
+  options?: {
+    parallel?: boolean;
+    verbose?: boolean;
+  };
+}
+
+export interface TestRunResponse extends BaseResponse {
+  results: TestResult[];
+  summary: {
+    total: number;
+    passed: number;
+    failed: number;
+    skipped: number;
+    errors: number;
+    duration: number; // milliseconds
+  };
+}
+
+/**
+ * Test-coverage operation - get test coverage information
+ */
+export interface TestCoverageRequest extends BaseRequest {
+  op: "test-coverage" | "test_coverage";
+  session: string;
+  namespace?: string;
+  options?: {
+    include_source?: boolean;
+  };
+}
+
+export interface CoverageInfo {
+  file: string;
+  lines_covered: number;
+  lines_total: number;
+  coverage_percent: number;
+  uncovered_lines?: number[];
+}
+
+export interface TestCoverageResponse extends BaseResponse {
+  coverage: CoverageInfo[];
+  summary: {
+    lines_covered: number;
+    lines_total: number;
+    coverage_percent: number;
+  };
+}
+
+/**
+ * Test-rerun-failures operation - rerun only failed tests
+ */
+export interface TestRerunFailuresRequest extends BaseRequest {
+  op: "test-rerun-failures" | "test_rerun_failures";
+  session: string;
+  options?: {
+    parallel?: boolean;
+    verbose?: boolean;
+  };
+}
+
+export interface TestRerunFailuresResponse extends BaseResponse {
+  results: TestResult[];
+  summary: {
+    total: number;
+    passed: number;
+    failed: number;
+    errors: number;
+    duration: number; // milliseconds
+  };
+}
+
+/**
+ * Text edit for refactoring operations
+ */
+export interface TextEdit {
+  file: string;
+  start_line: number;
+  start_column: number;
+  end_line: number;
+  end_column: number;
+  new_text: string;
+}
+
+/**
+ * Rename-symbol operation - rename a symbol across the codebase
+ */
+export interface RenameSymbolRequest extends BaseRequest {
+  op: "rename-symbol" | "rename_symbol";
+  session: string;
+  symbol: string;
+  new_name: string;
+  file?: string;
+  line?: number;
+  column?: number;
+}
+
+export interface RenameSymbolResponse extends BaseResponse {
+  edits: TextEdit[];
+  files_affected: number;
+}
+
+/**
+ * Extract-function operation - extract code into a new function
+ */
+export interface ExtractFunctionRequest extends BaseRequest {
+  op: "extract-function" | "extract_function";
+  session: string;
+  file: string;
+  start_line: number;
+  start_column: number;
+  end_line: number;
+  end_column: number;
+  function_name: string;
+}
+
+export interface ExtractFunctionResponse extends BaseResponse {
+  edits: TextEdit[];
+  new_function: string;
+}
+
+/**
+ * Inline-function operation - inline a function call
+ */
+export interface InlineFunctionRequest extends BaseRequest {
+  op: "inline-function" | "inline_function";
+  session: string;
+  symbol: string;
+  file?: string;
+  line?: number;
+  column?: number;
+  inline_all?: boolean; // Inline all occurrences or just one
+}
+
+export interface InlineFunctionResponse extends BaseResponse {
+  edits: TextEdit[];
+  occurrences_inlined: number;
+}
+
+// Additional operation types will be added for phases 7-8 as needed

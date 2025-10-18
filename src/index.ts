@@ -55,3 +55,11 @@ export type { StacktraceParams } from "./operations/phase5/stacktrace";
 export type { StepParams } from "./operations/phase5/step";
 export type { InspectLocalsParams } from "./operations/phase5/inspect-locals";
 export type { EvalInFrameParams } from "./operations/phase5/eval-in-frame";
+
+// Operation parameter types - Phase 6
+export type { TestRunParams } from "./operations/phase6/test-run";
+export type { TestCoverageParams } from "./operations/phase6/test-coverage";
+export type { TestRerunFailuresParams } from "./operations/phase6/test-rerun-failures";
+export type { RenameSymbolParams } from "./operations/phase6/rename-symbol";
+export type { ExtractFunctionParams } from "./operations/phase6/extract-function";
+export type { InlineFunctionParams } from "./operations/phase6/inline-function";

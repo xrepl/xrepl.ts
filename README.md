@@ -40,6 +40,13 @@ TypeScript client library for the xREPL protocol, enabling communication with LF
   - `step` - Step through code execution (into/over/out)
   - `inspect-locals` - Inspect local variables
   - `eval-in-frame` - Evaluate expressions in stack frames
+- ✅ **Phase 6 Operations**: All testing & refactoring operations implemented
+  - `test-run` - Run tests
+  - `test-coverage` - Get test coverage information
+  - `test-rerun-failures` - Rerun only failed tests
+  - `rename-symbol` - Rename symbols across codebase
+  - `extract-function` - Extract code into new function
+  - `inline-function` - Inline function calls
 
 ## Installation
 
@@ -643,7 +650,7 @@ The library follows a functional, type-safe design:
 - ✅ Phase 3: Compilation & Building (compile, lint, analysis)
 - ✅ Phase 4: CI/CD
 - ✅ Phase 5: Debugging (breakpoints, stepping, inspection)
-- ⏳ Phase 6: Testing & Refactoring
+- ✅ Phase 6: Testing & Refactoring (test running, coverage, refactoring)
 - ⏳ Phase 7: BEAM-Specific features
 - ⏳ Phase 8: Advanced features
 

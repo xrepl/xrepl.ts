@@ -71,6 +71,29 @@ import {
   EvalInFrameParams,
 } from "./operations/phase5/eval-in-frame";
 
+// Import Phase 6 operations
+import { testRun, TestRunParams } from "./operations/phase6/test-run";
+import {
+  testCoverage,
+  TestCoverageParams,
+} from "./operations/phase6/test-coverage";
+import {
+  testRerunFailures,
+  TestRerunFailuresParams,
+} from "./operations/phase6/test-rerun-failures";
+import {
+  renameSymbol,
+  RenameSymbolParams,
+} from "./operations/phase6/rename-symbol";
+import {
+  extractFunction,
+  ExtractFunctionParams,
+} from "./operations/phase6/extract-function";
+import {
+  inlineFunction,
+  InlineFunctionParams,
+} from "./operations/phase6/inline-function";
+
 // Import types
 import {
   EvalResponse,
@@ -100,6 +123,12 @@ import {
   StepResponse,
   InspectLocalsResponse,
   EvalInFrameResponse,
+  TestRunResponse,
+  TestCoverageResponse,
+  TestRerunFailuresResponse,
+  RenameSymbolResponse,
+  ExtractFunctionResponse,
+  InlineFunctionResponse,
 } from "./types/protocol";
 
 /**
@@ -191,6 +220,26 @@ export interface XReplClient {
   evalInFrame(
     params: EvalInFrameParams
   ): Promise<Result<EvalInFrameResponse, OperationError>>;
+
+  // Phase 6: Testing & Refactoring operations
+  testRun(
+    params: TestRunParams
+  ): Promise<Result<TestRunResponse, OperationError>>;
+  testCoverage(
+    params: TestCoverageParams
+  ): Promise<Result<TestCoverageResponse, OperationError>>;
+  testRerunFailures(
+    params: TestRerunFailuresParams
+  ): Promise<Result<TestRerunFailuresResponse, OperationError>>;
+  renameSymbol(
+    params: RenameSymbolParams
+  ): Promise<Result<RenameSymbolResponse, OperationError>>;
+  extractFunction(
+    params: ExtractFunctionParams
+  ): Promise<Result<ExtractFunctionResponse, OperationError>>;
+  inlineFunction(
+    params: InlineFunctionParams
+  ): Promise<Result<InlineFunctionResponse, OperationError>>;
 }
 
 /**
@@ -636,6 +685,91 @@ export function createClient(
           });
         }
         return evalInFrame(connectionManager, session, params, token);
+      },
+
+      // Phase 6: Testing & Refactoring operations
+      async testRun(
+        params: TestRunParams
+      ): Promise<Result<TestRunResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "test-run",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return testRun(connectionManager, session, params, token);
+      },
+
+      async testCoverage(
+        params: TestCoverageParams
+      ): Promise<Result<TestCoverageResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "test-coverage",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return testCoverage(connectionManager, session, params, token);
+      },
+
+      async testRerunFailures(
+        params: TestRerunFailuresParams
+      ): Promise<Result<TestRerunFailuresResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "test-rerun-failures",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return testRerunFailures(connectionManager, session, params, token);
+      },
+
+      async renameSymbol(
+        params: RenameSymbolParams
+      ): Promise<Result<RenameSymbolResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "rename-symbol",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return renameSymbol(connectionManager, session, params, token);
+      },
+
+      async extractFunction(
+        params: ExtractFunctionParams
+      ): Promise<Result<ExtractFunctionResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "extract-function",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return extractFunction(connectionManager, session, params, token);
+      },
+
+      async inlineFunction(
+        params: InlineFunctionParams
+      ): Promise<Result<InlineFunctionResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "inline-function",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return inlineFunction(connectionManager, session, params, token);
       },
     });
   } catch (error) {
