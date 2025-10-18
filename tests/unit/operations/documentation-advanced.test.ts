@@ -1,15 +1,15 @@
 import { describe, it, expect, beforeEach } from "@jest/globals";
 import { resetRequestCounter } from "../../../src/utils/id-generator";
-import type { ListMacrosParams } from "../../../src/operations/phase11/list-macros";
-import type { SearchHistoryParams } from "../../../src/operations/phase11/search-history";
-import type { GenerateDocParams } from "../../../src/operations/phase11/generate-doc";
-import type { ModuleSummaryParams } from "../../../src/operations/phase11/module-summary";
-import type { ExpandSnippetParams } from "../../../src/operations/phase11/expand-snippet";
-import type { TextDocumentDidOpenParams } from "../../../src/operations/phase11/text-document-did-open";
-import type { TextDocumentDidChangeParams } from "../../../src/operations/phase11/text-document-did-change";
-import type { TextDocumentDidCloseParams } from "../../../src/operations/phase11/text-document-did-close";
+import type { ListMacrosParams } from "../../../src/operations/advanced-features/list-macros";
+import type { SearchHistoryParams } from "../../../src/operations/advanced-features/search-history";
+import type { GenerateDocParams } from "../../../src/operations/documentation/generate-doc";
+import type { ModuleSummaryParams } from "../../../src/operations/documentation/module-summary";
+import type { ExpandSnippetParams } from "../../../src/operations/advanced-features/expand-snippet";
+import type { TextDocumentDidOpenParams } from "../../../src/operations/advanced-features/text-document-did-open";
+import type { TextDocumentDidChangeParams } from "../../../src/operations/advanced-features/text-document-did-change";
+import type { TextDocumentDidCloseParams } from "../../../src/operations/advanced-features/text-document-did-close";
 
-describe("Phase 11: NICE TO HAVE - Additional Features", () => {
+describe("Documentation & Advanced Features Operations", () => {
   beforeEach(() => {
     resetRequestCounter();
   });

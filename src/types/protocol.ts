@@ -1288,7 +1288,7 @@ export interface BuildRequest extends BaseRequest {
   op: "build";
   session: string;
   project_root: string;
-  target: "compile" | "test" | "release" | string;
+  target: string;
 }
 
 export interface BuildResponse extends BaseResponse {
@@ -1404,11 +1404,11 @@ export interface CompleteContextRequest extends BaseRequest {
   buffer: string;
   cursor_line: number;
   cursor_column: number;
-  parse_tree?: any;
+  parse_tree?: unknown;
 }
 
 export interface CompleteContextResponse extends BaseResponse {
-  candidates: any[]; // Same format as complete
+  candidates: unknown[]; // Same format as complete
   context: {
     in_function_call: boolean;
     function_name?: string;
@@ -1486,7 +1486,7 @@ export interface EvalAtPointRequest extends BaseRequest {
   column: number;
   context?: {
     buffer_contents?: string;
-    surrounding_forms?: any[];
+    surrounding_forms?: unknown[];
   };
 }
 
@@ -1535,7 +1535,7 @@ export interface ModuleDocResponse extends BaseResponse {
   module: string;
   doc: string;
   exports: ModuleFunctionDoc[];
-  types?: any[];
+  types?: unknown[];
   source_url?: string;
 }
 
@@ -1611,8 +1611,8 @@ export interface ModuleInfoResponse extends BaseResponse {
     name: string;
     path: string;
     exports: ModuleExport[];
-    attributes: Record<string, any>;
-    compile_options: any[];
+    attributes: Record<string, unknown>;
+    compile_options: unknown[];
     md5: string;
   };
 }
@@ -1756,7 +1756,7 @@ export interface TextDocumentDidChangeRequest extends BaseRequest {
 }
 
 export interface TextDocumentDidChangeResponse extends BaseResponse {
-  diagnostics?: any[];
+  diagnostics?: unknown[];
 }
 
 /**

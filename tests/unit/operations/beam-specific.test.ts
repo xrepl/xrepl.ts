@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach } from "@jest/globals";
 import { resetRequestCounter } from "../../../src/utils/id-generator";
-import type { HotReloadParams } from "../../../src/operations/phase7/hot-reload";
-import type { ListProcessesParams } from "../../../src/operations/phase7/list-processes";
-import type { InspectProcessParams } from "../../../src/operations/phase7/inspect-process";
-import type { TraceCallsParams } from "../../../src/operations/phase7/trace-calls";
-import type { SystemInfoParams } from "../../../src/operations/phase7/system-info";
-import type { ObserverDataParams } from "../../../src/operations/phase7/observer-data";
+import type { HotReloadParams } from "../../../src/operations/beam-specific/hot-reload";
+import type { ListProcessesParams } from "../../../src/operations/beam-specific/list-processes";
+import type { InspectProcessParams } from "../../../src/operations/beam-specific/inspect-process";
+import type { TraceCallsParams } from "../../../src/operations/beam-specific/trace-calls";
+import type { SystemInfoParams } from "../../../src/operations/beam-specific/system-info";
+import type { ObserverDataParams } from "../../../src/operations/beam-specific/observer-data";
 
-describe("Phase 7: BEAM-Specific Operations", () => {
+describe("BEAM-Specific Operations", () => {
   beforeEach(() => {
     resetRequestCounter();
   });

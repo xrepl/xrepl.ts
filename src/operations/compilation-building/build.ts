@@ -14,7 +14,7 @@ export interface BuildParams {
   /** Project root directory path */
   project_root: string;
   /** Build target: compile, test, release, or custom target */
-  target: "compile" | "test" | "release" | string;
+  target: string;
 }
 
 /**
