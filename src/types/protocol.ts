@@ -1616,3 +1616,158 @@ export interface ModuleInfoResponse extends BaseResponse {
     md5: string;
   };
 }
+
+// ============================================================================
+// Phase 11: NICE TO HAVE - Additional Features
+// ============================================================================
+
+/**
+ * List-macros operation - list available macros
+ */
+export interface ListMacrosRequest extends BaseRequest {
+  op: "list_macros" | "list-macros";
+  session: string;
+  module?: string;
+}
+
+export interface MacroInfo {
+  name: string;
+  arity: number;  // -1 for varargs
+  doc: string;
+}
+
+export interface ListMacrosResponse extends BaseResponse {
+  macros: MacroInfo[];
+}
+
+/**
+ * Search-history operation - search evaluation history
+ */
+export interface SearchHistoryRequest extends BaseRequest {
+  op: "search_history" | "search-history";
+  session: string;
+  query: string;
+  search_code?: boolean;
+  search_results?: boolean;
+}
+
+export interface HistoryMatch {
+  index: number;
+  code: string;
+  result: string;
+}
+
+export interface SearchHistoryResponse extends BaseResponse {
+  matches: HistoryMatch[];
+}
+
+/**
+ * Generate-doc operation - generate documentation
+ */
+export interface GenerateDocRequest extends BaseRequest {
+  op: "generate_doc" | "generate-doc";
+  session: string;
+  symbol: string;
+  include_examples?: boolean;
+}
+
+export interface GenerateDocResponse extends BaseResponse {
+  doc: string;
+}
+
+/**
+ * Module-summary operation - generate module summary
+ */
+export interface ModuleSummaryRequest extends BaseRequest {
+  op: "module_summary" | "module-summary";
+  session: string;
+  module: string;
+}
+
+export interface FunctionInfo {
+  name: string;
+  purpose: string;
+}
+
+export interface ModuleSummary {
+  overview: string;
+  main_functions: FunctionInfo[];
+  dependencies: string[];
+}
+
+export interface ModuleSummaryResponse extends BaseResponse {
+  summary: ModuleSummary;
+}
+
+/**
+ * Expand-snippet operation - expand code snippet
+ */
+export interface ExpandSnippetRequest extends BaseRequest {
+  op: "expand_snippet" | "expand-snippet";
+  session: string;
+  snippet: string;
+  context?: {
+    module?: string;
+    surrounding_code?: string;
+  };
+}
+
+export interface PlaceholderInfo {
+  name: string;
+  position: number;
+}
+
+export interface ExpandSnippetResponse extends BaseResponse {
+  expanded: string;
+  placeholders: PlaceholderInfo[];
+}
+
+/**
+ * Text-document-did-open operation - LSP-style document opened notification
+ */
+export interface TextDocumentDidOpenRequest extends BaseRequest {
+  op: "text_document_did_open" | "text-document-did-open";
+  session: string;
+  uri: string;
+  language_id: string;
+  version: number;
+  text: string;
+}
+
+export interface TextDocumentDidOpenResponse extends BaseResponse {
+  // Simple acknowledgment
+}
+
+/**
+ * Text-document-did-change operation - LSP-style document changed notification
+ */
+export interface TextDocumentDidChangeRequest extends BaseRequest {
+  op: "text_document_did_change" | "text-document-did-change";
+  session: string;
+  uri: string;
+  version: number;
+  changes: Array<{
+    range: {
+      start: { line: number; character: number };
+      end: { line: number; character: number };
+    };
+    text: string;
+  }>;
+}
+
+export interface TextDocumentDidChangeResponse extends BaseResponse {
+  diagnostics?: any[];
+}
+
+/**
+ * Text-document-did-close operation - LSP-style document closed notification
+ */
+export interface TextDocumentDidCloseRequest extends BaseRequest {
+  op: "text_document_did_close" | "text-document-did-close";
+  session: string;
+  uri: string;
+}
+
+export interface TextDocumentDidCloseResponse extends BaseResponse {
+  // Simple acknowledgment
+}

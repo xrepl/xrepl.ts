@@ -113,3 +113,13 @@ export type { SearchDocsParams } from "./operations/phase10/search-docs";
 export type { HistoryParams } from "./operations/phase10/history";
 export type { ClearSessionParams } from "./operations/phase10/clear-session";
 export type { ModuleInfoParams } from "./operations/phase10/module-info";
+
+// Operation parameter types - Phase 11
+export type { ListMacrosParams } from "./operations/phase11/list-macros";
+export type { SearchHistoryParams } from "./operations/phase11/search-history";
+export type { GenerateDocParams } from "./operations/phase11/generate-doc";
+export type { ModuleSummaryParams } from "./operations/phase11/module-summary";
+export type { ExpandSnippetParams } from "./operations/phase11/expand-snippet";
+export type { TextDocumentDidOpenParams } from "./operations/phase11/text-document-did-open";
+export type { TextDocumentDidChangeParams } from "./operations/phase11/text-document-did-change";
+export type { TextDocumentDidCloseParams } from "./operations/phase11/text-document-did-close";

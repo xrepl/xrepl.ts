@@ -237,6 +237,40 @@ import {
   ModuleInfoParams,
 } from "./operations/phase10/module-info";
 
+// Import Phase 11 operations
+import {
+  listMacros,
+  ListMacrosParams,
+} from "./operations/phase11/list-macros";
+import {
+  searchHistory,
+  SearchHistoryParams,
+} from "./operations/phase11/search-history";
+import {
+  generateDoc,
+  GenerateDocParams,
+} from "./operations/phase11/generate-doc";
+import {
+  moduleSummary,
+  ModuleSummaryParams,
+} from "./operations/phase11/module-summary";
+import {
+  expandSnippet,
+  ExpandSnippetParams,
+} from "./operations/phase11/expand-snippet";
+import {
+  textDocumentDidOpen,
+  TextDocumentDidOpenParams,
+} from "./operations/phase11/text-document-did-open";
+import {
+  textDocumentDidChange,
+  TextDocumentDidChangeParams,
+} from "./operations/phase11/text-document-did-change";
+import {
+  textDocumentDidClose,
+  TextDocumentDidCloseParams,
+} from "./operations/phase11/text-document-did-close";
+
 // Import types
 import {
   EvalResponse,
@@ -314,6 +348,14 @@ import {
   HistoryResponse,
   ClearSessionResponse,
   ModuleInfoResponse,
+  ListMacrosResponse,
+  SearchHistoryResponse,
+  GenerateDocResponse,
+  ModuleSummaryResponse,
+  ExpandSnippetResponse,
+  TextDocumentDidOpenResponse,
+  TextDocumentDidChangeResponse,
+  TextDocumentDidCloseResponse,
 } from "./types/protocol";
 
 /**
@@ -559,6 +601,32 @@ export interface XReplClient {
   moduleInfo(
     params: ModuleInfoParams
   ): Promise<Result<ModuleInfoResponse, OperationError>>;
+
+  // Phase 11: NICE TO HAVE - Additional Features
+  listMacros(
+    params: ListMacrosParams
+  ): Promise<Result<ListMacrosResponse, OperationError>>;
+  searchHistory(
+    params: SearchHistoryParams
+  ): Promise<Result<SearchHistoryResponse, OperationError>>;
+  generateDoc(
+    params: GenerateDocParams
+  ): Promise<Result<GenerateDocResponse, OperationError>>;
+  moduleSummary(
+    params: ModuleSummaryParams
+  ): Promise<Result<ModuleSummaryResponse, OperationError>>;
+  expandSnippet(
+    params: ExpandSnippetParams
+  ): Promise<Result<ExpandSnippetResponse, OperationError>>;
+  textDocumentDidOpen(
+    params: TextDocumentDidOpenParams
+  ): Promise<Result<TextDocumentDidOpenResponse, OperationError>>;
+  textDocumentDidChange(
+    params: TextDocumentDidChangeParams
+  ): Promise<Result<TextDocumentDidChangeResponse, OperationError>>;
+  textDocumentDidClose(
+    params: TextDocumentDidCloseParams
+  ): Promise<Result<TextDocumentDidCloseResponse, OperationError>>;
 }
 
 /**
@@ -1660,6 +1728,119 @@ export function createClient(
           });
         }
         return moduleInfo(connectionManager, session, params, token);
+      },
+
+      // Phase 11: NICE TO HAVE - Additional Features
+      async listMacros(
+        params: ListMacrosParams
+      ): Promise<Result<ListMacrosResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "list-macros",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return listMacros(connectionManager, session, params, token);
+      },
+
+      async searchHistory(
+        params: SearchHistoryParams
+      ): Promise<Result<SearchHistoryResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "search-history",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return searchHistory(connectionManager, session, params, token);
+      },
+
+      async generateDoc(
+        params: GenerateDocParams
+      ): Promise<Result<GenerateDocResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "generate-doc",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return generateDoc(connectionManager, session, params, token);
+      },
+
+      async moduleSummary(
+        params: ModuleSummaryParams
+      ): Promise<Result<ModuleSummaryResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "module-summary",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return moduleSummary(connectionManager, session, params, token);
+      },
+
+      async expandSnippet(
+        params: ExpandSnippetParams
+      ): Promise<Result<ExpandSnippetResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "expand-snippet",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return expandSnippet(connectionManager, session, params, token);
+      },
+
+      async textDocumentDidOpen(
+        params: TextDocumentDidOpenParams
+      ): Promise<Result<TextDocumentDidOpenResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "text-document-did-open",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return textDocumentDidOpen(connectionManager, session, params, token);
+      },
+
+      async textDocumentDidChange(
+        params: TextDocumentDidChangeParams
+      ): Promise<Result<TextDocumentDidChangeResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "text-document-did-change",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return textDocumentDidChange(connectionManager, session, params, token);
+      },
+
+      async textDocumentDidClose(
+        params: TextDocumentDidCloseParams
+      ): Promise<Result<TextDocumentDidCloseResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "text-document-did-close",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return textDocumentDidClose(connectionManager, session, params, token);
       },
     });
   } catch (error) {
