@@ -1,0 +1,214 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  quality-checks:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run type checking
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build package
+        run: npm run build
+
+      - name: Verify build artifacts
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "❌ Error: dist directory not found after build"
+            exit 1
+          fi
+          if [ ! -f "dist/index.js" ]; then
+            echo "❌ Error: dist/index.js not found after build"
+            exit 1
+          fi
+          if [ ! -f "dist/index.d.ts" ]; then
+            echo "❌ Error: dist/index.d.ts not found after build"
+            exit 1
+          fi
+          echo "✅ Build artifacts verified"
+
+  publish-npm:
+    needs: quality-checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Get package version
+        id: package-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Publishing version: $VERSION"
+
+      - name: Publish to NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Report NPM publish success
+        if: success()
+        run: |
+          echo "✅ Successfully published @xrepl/client@${{ steps.package-version.outputs.version }} to NPM"
+          echo "Install with: npm install @xrepl/client@${{ steps.package-version.outputs.version }}"
+
+      - name: Report NPM publish failure
+        if: failure()
+        run: |
+          echo "❌ Failed to publish to NPM"
+          echo "Check if:"
+          echo "  - NPM_TOKEN secret is configured correctly"
+          echo "  - Version ${{ steps.package-version.outputs.version }} already exists"
+          echo "  - Package name @xrepl/client is available"
+
+  publish-github:
+    needs: quality-checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@xrepl'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Configure package.json for GitHub Packages
+        run: |
+          node -e "
+          const fs = require('fs');
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          pkg.publishConfig = {
+            ...pkg.publishConfig,
+            registry: 'https://npm.pkg.github.com'
+          };
+          pkg.repository = {
+            type: 'git',
+            url: 'git+https://github.com/xrepl/client.git'
+          };
+          fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+          "
+
+      - name: Get package version
+        id: package-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Publishing version: $VERSION"
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report GitHub Packages publish success
+        if: success()
+        run: |
+          echo "✅ Successfully published @xrepl/client@${{ steps.package-version.outputs.version }} to GitHub Packages"
+          echo "Install with: npm install @xrepl/client@${{ steps.package-version.outputs.version }}"
+
+      - name: Report GitHub Packages publish failure
+        if: failure()
+        run: |
+          echo "❌ Failed to publish to GitHub Packages"
+          echo "Check if:"
+          echo "  - GITHUB_TOKEN has packages:write permission"
+          echo "  - Version ${{ steps.package-version.outputs.version }} already exists"
+          echo "  - Repository URL is correct"
+
+  publish-summary:
+    needs: [publish-npm, publish-github]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get package version
+        id: package-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create publish summary
+        run: |
+          echo "# 📦 Publish Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Package**: @xrepl/client" >> $GITHUB_STEP_SUMMARY
+          echo "**Version**: ${{ steps.package-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.publish-npm.result }}" = "success" ]; then
+            echo "✅ **NPM**: Published successfully" >> $GITHUB_STEP_SUMMARY
+            echo "   \`npm install @xrepl/client@${{ steps.package-version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **NPM**: Publish failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.publish-github.result }}" = "success" ]; then
+            echo "✅ **GitHub Packages**: Published successfully" >> $GITHUB_STEP_SUMMARY
+            echo "   Configure \`.npmrc\` with:" >> $GITHUB_STEP_SUMMARY
+            echo "   \`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "   @xrepl:registry=https://npm.pkg.github.com" >> $GITHUB_STEP_SUMMARY
+            echo "   \`\`\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **GitHub Packages**: Publish failed" >> $GITHUB_STEP_SUMMARY
+          fi

@@ -1,0 +1,112 @@
+name: Version Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'package.json'
+
+jobs:
+  check-version-bump:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      
+      - name: Get PR branch version
+        id: pr-version
+        run: |
+          PR_VERSION=$(node -p "require('./package.json').version")
+          echo "version=$PR_VERSION" >> $GITHUB_OUTPUT
+          echo "PR branch version: $PR_VERSION"
+      
+      - name: Get main branch version
+        id: main-version
+        run: |
+          git checkout origin/main -- package.json
+          MAIN_VERSION=$(node -p "require('./package.json').version")
+          echo "version=$MAIN_VERSION" >> $GITHUB_OUTPUT
+          echo "Main branch version: $MAIN_VERSION"
+          git checkout HEAD -- package.json
+      
+      - name: Validate version format
+        run: |
+          PR_VERSION="${{ steps.pr-version.outputs.version }}"
+          if ! echo "$PR_VERSION" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "❌ Error: Version must follow semantic versioning format (X.Y.Z)"
+            echo "Found: $PR_VERSION"
+            exit 1
+          fi
+          echo "✅ Version format is valid"
+      
+      - name: Compare versions
+        run: |
+          PR_VERSION="${{ steps.pr-version.outputs.version }}"
+          MAIN_VERSION="${{ steps.main-version.outputs.version }}"
+          
+          echo "Comparing versions:"
+          echo "  Main branch: $MAIN_VERSION"
+          echo "  PR branch:   $PR_VERSION"
+          
+          # Parse versions
+          IFS='.' read -r MAIN_MAJOR MAIN_MINOR MAIN_PATCH <<< "$MAIN_VERSION"
+          IFS='.' read -r PR_MAJOR PR_MINOR PR_PATCH <<< "$PR_VERSION"
+          
+          # Check if version was bumped
+          VERSION_BUMPED=false
+          BUMP_TYPE=""
+          
+          if [ "$PR_MAJOR" -gt "$MAIN_MAJOR" ]; then
+            VERSION_BUMPED=true
+            BUMP_TYPE="major"
+          elif [ "$PR_MAJOR" -eq "$MAIN_MAJOR" ] && [ "$PR_MINOR" -gt "$MAIN_MINOR" ]; then
+            VERSION_BUMPED=true
+            BUMP_TYPE="minor"
+          elif [ "$PR_MAJOR" -eq "$MAIN_MAJOR" ] && [ "$PR_MINOR" -eq "$MAIN_MINOR" ] && [ "$PR_PATCH" -gt "$MAIN_PATCH" ]; then
+            VERSION_BUMPED=true
+            BUMP_TYPE="patch"
+          fi
+          
+          if [ "$VERSION_BUMPED" = false ]; then
+            echo ""
+            echo "❌ ERROR: Version must be incremented before merging to main"
+            echo ""
+            echo "Current version in main: $MAIN_VERSION"
+            echo "Version in PR:           $PR_VERSION"
+            echo ""
+            echo "Please update the version in package.json using one of:"
+            echo "  - Patch bump (bug fixes):           $MAIN_MAJOR.$MAIN_MINOR.$((MAIN_PATCH + 1))"
+            echo "  - Minor bump (new features):        $MAIN_MAJOR.$((MAIN_MINOR + 1)).0"
+            echo "  - Major bump (breaking changes):    $((MAIN_MAJOR + 1)).0.0"
+            echo ""
+            exit 1
+          fi
+          
+          echo ""
+          echo "✅ Version bump detected: $BUMP_TYPE"
+          echo "   $MAIN_VERSION → $PR_VERSION"
+          echo ""
+      
+      - name: Add success comment
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prVersion = '${{ steps.pr-version.outputs.version }}';
+            const mainVersion = '${{ steps.main-version.outputs.version }}';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ **Version Check Passed**\n\nVersion has been properly incremented:\n- Main: \`${mainVersion}\`\n- PR: \`${prVersion}\``
+            });
