@@ -74,7 +74,7 @@ export class TcpTransport implements Transport {
         resolve(
           err({
             type: "connection_error",
-            message: `Failed to connect: ${error}`,
+            message: `Failed to connect: ${error instanceof Error ? error.message : String(error)}`,
           })
         );
       }
@@ -99,7 +99,7 @@ export class TcpTransport implements Transport {
         resolve(
           err({
             type: "disconnection_error",
-            message: `Failed to disconnect: ${error}`,
+            message: `Failed to disconnect: ${error instanceof Error ? error.message : String(error)}`,
           })
         );
       }
@@ -135,7 +135,7 @@ export class TcpTransport implements Transport {
         resolve(
           err({
             type: "send_error",
-            message: `Failed to send data: ${error}`,
+            message: `Failed to send data: ${error instanceof Error ? error.message : String(error)}`,
           })
         );
       }

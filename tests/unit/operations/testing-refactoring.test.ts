@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach } from "@jest/globals";
 import { resetRequestCounter } from "../../../src/utils/id-generator";
-import type { TestRunParams } from "../../../src/operations/phase6/test-run";
-import type { TestCoverageParams } from "../../../src/operations/phase6/test-coverage";
-import type { TestRerunFailuresParams } from "../../../src/operations/phase6/test-rerun-failures";
-import type { RenameSymbolParams } from "../../../src/operations/phase6/rename-symbol";
-import type { ExtractFunctionParams } from "../../../src/operations/phase6/extract-function";
-import type { InlineFunctionParams } from "../../../src/operations/phase6/inline-function";
+import type { TestRunParams } from "../../../src/operations/testing/test-run";
+import type { TestCoverageParams } from "../../../src/operations/testing/test-coverage";
+import type { TestRerunFailuresParams } from "../../../src/operations/testing/test-rerun-failures";
+import type { RenameSymbolParams } from "../../../src/operations/refactoring/rename-symbol";
+import type { ExtractFunctionParams } from "../../../src/operations/refactoring/extract-function";
+import type { InlineFunctionParams } from "../../../src/operations/refactoring/inline-function";
 
-describe("Phase 6: Testing & Refactoring Operations", () => {
+describe("Testing & Refactoring Operations", () => {
   beforeEach(() => {
     resetRequestCounter();
   });

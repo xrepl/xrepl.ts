@@ -1,19 +1,19 @@
 import { describe, it, expect, beforeEach } from "@jest/globals";
 import { resetRequestCounter } from "../../../src/utils/id-generator";
-import type { MacroexpandParams } from "../../../src/operations/phase8/macroexpand";
-import type { MacroexpandAllParams } from "../../../src/operations/phase8/macroexpand-all";
-import type { ProfileStartParams } from "../../../src/operations/phase8/profile-start";
-import type { ProfileStopParams } from "../../../src/operations/phase8/profile-stop";
-import type { BenchmarkParams } from "../../../src/operations/phase8/benchmark";
-import type { WorkspaceSymbolsParams } from "../../../src/operations/phase8/workspace-symbols";
-import type { GenerateFunctionParams } from "../../../src/operations/phase8/generate-function";
-import type { GenerateTestsParams } from "../../../src/operations/phase8/generate-tests";
-import type { SuggestImprovementsParams } from "../../../src/operations/phase8/suggest-improvements";
-import type { SnippetsParams } from "../../../src/operations/phase8/snippets";
-import type { ShareSessionParams } from "../../../src/operations/phase8/share-session";
-import type { RestoreSessionParams } from "../../../src/operations/phase8/restore-session";
+import type { MacroexpandParams } from "../../../src/operations/advanced-features/macroexpand";
+import type { MacroexpandAllParams } from "../../../src/operations/advanced-features/macroexpand-all";
+import type { ProfileStartParams } from "../../../src/operations/advanced-features/profile-start";
+import type { ProfileStopParams } from "../../../src/operations/advanced-features/profile-stop";
+import type { BenchmarkParams } from "../../../src/operations/advanced-features/benchmark";
+import type { WorkspaceSymbolsParams } from "../../../src/operations/navigation/workspace-symbols";
+import type { GenerateFunctionParams } from "../../../src/operations/advanced-features/generate-function";
+import type { GenerateTestsParams } from "../../../src/operations/testing/generate-tests";
+import type { SuggestImprovementsParams } from "../../../src/operations/advanced-features/suggest-improvements";
+import type { SnippetsParams } from "../../../src/operations/advanced-features/snippets";
+import type { ShareSessionParams } from "../../../src/operations/advanced-features/share-session";
+import type { RestoreSessionParams } from "../../../src/operations/advanced-features/restore-session";
 
-describe("Phase 8: Advanced Features", () => {
+describe("Advanced Features & Navigation Operations", () => {
   beforeEach(() => {
     resetRequestCounter();
   });

@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach } from "@jest/globals";
 import { resetRequestCounter } from "../../../src/utils/id-generator";
-import type { SetBreakpointParams } from "../../../src/operations/phase5/set-breakpoint";
-import type { ClearBreakpointParams } from "../../../src/operations/phase5/clear-breakpoint";
-import type { StacktraceParams } from "../../../src/operations/phase5/stacktrace";
-import type { StepParams } from "../../../src/operations/phase5/step";
-import type { InspectLocalsParams } from "../../../src/operations/phase5/inspect-locals";
-import type { EvalInFrameParams } from "../../../src/operations/phase5/eval-in-frame";
+import type { SetBreakpointParams } from "../../../src/operations/debugging/set-breakpoint";
+import type { ClearBreakpointParams } from "../../../src/operations/debugging/clear-breakpoint";
+import type { StacktraceParams } from "../../../src/operations/debugging/stacktrace";
+import type { StepParams } from "../../../src/operations/debugging/step";
+import type { InspectLocalsParams } from "../../../src/operations/debugging/inspect-locals";
+import type { EvalInFrameParams } from "../../../src/operations/debugging/eval-in-frame";
 
-describe("Phase 5: Debugging Operations", () => {
+describe("Debugging Operations", () => {
   beforeEach(() => {
     resetRequestCounter();
   });

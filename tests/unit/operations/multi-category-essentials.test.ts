@@ -1,20 +1,20 @@
 import { describe, it, expect, beforeEach } from "@jest/globals";
 import { resetRequestCounter } from "../../../src/utils/id-generator";
-import type { SwitchNamespaceParams } from "../../../src/operations/phase9/switch-namespace";
-import type { SessionInfoParams } from "../../../src/operations/phase9/session-info";
-import type { UploadHistoryParams } from "../../../src/operations/phase9/upload-history";
-import type { TypeInfoParams } from "../../../src/operations/phase9/type-info";
-import type { AproposParams } from "../../../src/operations/phase9/apropos";
-import type { SymbolAtPointParams } from "../../../src/operations/phase9/symbol-at-point";
-import type { DependenciesParams } from "../../../src/operations/phase9/dependencies";
-import type { BuildParams } from "../../../src/operations/phase9/build";
-import type { EvalMultipleParams } from "../../../src/operations/phase9/eval-multiple";
-import type { CancelParams } from "../../../src/operations/phase9/cancel";
-import type { CapabilitiesParams } from "../../../src/operations/phase9/capabilities";
-import type { VersionParams } from "../../../src/operations/phase9/version";
-import type { LoadedModulesParams } from "../../../src/operations/phase9/loaded-modules";
+import type { SwitchNamespaceParams } from "../../../src/operations/session-management/switch-namespace";
+import type { SessionInfoParams } from "../../../src/operations/session-management/session-info";
+import type { UploadHistoryParams } from "../../../src/operations/status-introspection/upload-history";
+import type { TypeInfoParams } from "../../../src/operations/code-intelligence/type-info";
+import type { AproposParams } from "../../../src/operations/code-intelligence/apropos";
+import type { SymbolAtPointParams } from "../../../src/operations/navigation/symbol-at-point";
+import type { DependenciesParams } from "../../../src/operations/compilation-building/dependencies";
+import type { BuildParams } from "../../../src/operations/compilation-building/build";
+import type { EvalMultipleParams } from "../../../src/operations/code-evaluation/eval-multiple";
+import type { CancelParams } from "../../../src/operations/code-evaluation/cancel";
+import type { CapabilitiesParams } from "../../../src/operations/status-introspection/capabilities";
+import type { VersionParams } from "../../../src/operations/status-introspection/version";
+import type { LoadedModulesParams } from "../../../src/operations/status-introspection/loaded-modules";
 
-describe("Phase 9: MUST HAVE - Essential Operations", () => {
+describe("Multi-Category Operations (Phase 9)", () => {
   beforeEach(() => {
     resetRequestCounter();
   });

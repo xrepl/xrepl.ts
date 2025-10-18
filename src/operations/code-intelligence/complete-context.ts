@@ -18,7 +18,7 @@ export interface CompleteContextParams {
   /** Cursor column number (1-based) */
   cursor_column: number;
   /** Optional parse tree for enhanced completion */
-  parse_tree?: any;
+  parse_tree?: unknown;
 }
 
 /**
@@ -89,9 +89,12 @@ export async function completeContext(
     buffer: params.buffer,
     cursor_line: params.cursor_line,
     cursor_column: params.cursor_column,
-    ...(params.parse_tree && { parse_tree: params.parse_tree }),
     ...(token && { token }),
   };
+
+  if (params.parse_tree !== undefined) {
+    request.parse_tree = params.parse_tree;
+  }
 
   // Send request and await response
   const result = await connection.sendRequest<

@@ -6,270 +6,274 @@ import { ConnectionManager } from "./connection/manager";
 import { SessionTracker } from "./session/tracker";
 import { ClientError, OperationError } from "./types/errors";
 
-// Import Phase 1 operations
-import { evalCode, EvalParams } from "./operations/phase1/eval";
-import { cloneSession } from "./operations/phase1/clone";
-import { closeSession } from "./operations/phase1/close";
-import { listSessions } from "./operations/phase1/ls-sessions";
-import { ping } from "./operations/phase1/ping";
-import { describe } from "./operations/phase1/describe";
-import { interrupt } from "./operations/phase1/interrupt";
-import { loadFile, LoadFileParams } from "./operations/phase1/load-file";
-
-// Import Phase 2 operations
-import { complete, CompleteParams } from "./operations/phase2/complete";
-import { signature, SignatureParams } from "./operations/phase2/signature";
-import { eldoc, EldocParams } from "./operations/phase2/eldoc";
-import { doc, DocParams } from "./operations/phase2/doc";
-import {
-  findDefinition,
-  FindDefinitionParams,
-} from "./operations/phase2/find-definition";
-import {
-  findReferences,
-  FindReferencesParams,
-} from "./operations/phase2/find-references";
-import {
-  listDefinitions,
-  ListDefinitionsParams,
-} from "./operations/phase2/list-definitions";
-import { format, FormatParams } from "./operations/phase2/format";
-
-// Import Phase 3 operations
-import {
-  compileFile,
-  CompileFileParams,
-} from "./operations/phase3/compile-file";
-import {
-  compileProject,
-  CompileProjectParams,
-} from "./operations/phase3/compile-project";
-import { lint, LintParams } from "./operations/phase3/lint";
-import {
-  bufferAnalysis,
-  BufferAnalysisParams,
-} from "./operations/phase3/buffer-analysis";
-
-// Import Phase 5 operations
-import {
-  setBreakpoint,
-  SetBreakpointParams,
-} from "./operations/phase5/set-breakpoint";
-import {
-  clearBreakpoint,
-  ClearBreakpointParams,
-} from "./operations/phase5/clear-breakpoint";
-import { listBreakpoints } from "./operations/phase5/list-breakpoints";
-import { stacktrace, StacktraceParams } from "./operations/phase5/stacktrace";
-import { step, StepParams } from "./operations/phase5/step";
-import {
-  inspectLocals,
-  InspectLocalsParams,
-} from "./operations/phase5/inspect-locals";
-import {
-  evalInFrame,
-  EvalInFrameParams,
-} from "./operations/phase5/eval-in-frame";
-
-// Import Phase 6 operations
-import { testRun, TestRunParams } from "./operations/phase6/test-run";
-import {
-  testCoverage,
-  TestCoverageParams,
-} from "./operations/phase6/test-coverage";
-import {
-  testRerunFailures,
-  TestRerunFailuresParams,
-} from "./operations/phase6/test-rerun-failures";
-import {
-  renameSymbol,
-  RenameSymbolParams,
-} from "./operations/phase6/rename-symbol";
-import {
-  extractFunction,
-  ExtractFunctionParams,
-} from "./operations/phase6/extract-function";
-import {
-  inlineFunction,
-  InlineFunctionParams,
-} from "./operations/phase6/inline-function";
-
-// Import Phase 7 operations
-import { hotReload, HotReloadParams } from "./operations/phase7/hot-reload";
-import {
-  listProcesses,
-  ListProcessesParams,
-} from "./operations/phase7/list-processes";
-import {
-  inspectProcess,
-  InspectProcessParams,
-} from "./operations/phase7/inspect-process";
-import { traceCalls, TraceCallsParams } from "./operations/phase7/trace-calls";
-import { systemInfo, SystemInfoParams } from "./operations/phase7/system-info";
-import {
-  observerData,
-  ObserverDataParams,
-} from "./operations/phase7/observer-data";
-
-// Import Phase 8 operations
-import {
-  macroexpand,
-  MacroexpandParams,
-} from "./operations/phase8/macroexpand";
-import {
-  macroexpandAll,
-  MacroexpandAllParams,
-} from "./operations/phase8/macroexpand-all";
-import {
-  profileStart,
-  ProfileStartParams,
-} from "./operations/phase8/profile-start";
-import {
-  profileStop,
-  ProfileStopParams,
-} from "./operations/phase8/profile-stop";
-import { benchmark, BenchmarkParams } from "./operations/phase8/benchmark";
-import {
-  workspaceSymbols,
-  WorkspaceSymbolsParams,
-} from "./operations/phase8/workspace-symbols";
-import {
-  generateFunction,
-  GenerateFunctionParams,
-} from "./operations/phase8/generate-function";
-import {
-  generateTests,
-  GenerateTestsParams,
-} from "./operations/phase8/generate-tests";
-import {
-  suggestImprovements,
-  SuggestImprovementsParams,
-} from "./operations/phase8/suggest-improvements";
-import { snippets, SnippetsParams } from "./operations/phase8/snippets";
-import {
-  shareSession,
-  ShareSessionParams,
-} from "./operations/phase8/share-session";
-import {
-  restoreSession,
-  RestoreSessionParams,
-} from "./operations/phase8/restore-session";
-
-// Import Phase 9 operations
+// Session Management operations
+import { cloneSession } from "./operations/session-management/clone";
+import { closeSession } from "./operations/session-management/close";
+import { listSessions } from "./operations/session-management/ls-sessions";
 import {
   switchNamespace,
   SwitchNamespaceParams,
-} from "./operations/phase9/switch-namespace";
+} from "./operations/session-management/switch-namespace";
 import {
   sessionInfo,
   SessionInfoParams,
-} from "./operations/phase9/session-info";
-import {
-  uploadHistory,
-  UploadHistoryParams,
-} from "./operations/phase9/upload-history";
-import { typeInfo, TypeInfoParams } from "./operations/phase9/type-info";
-import { apropos, AproposParams } from "./operations/phase9/apropos";
-import {
-  symbolAtPoint,
-  SymbolAtPointParams,
-} from "./operations/phase9/symbol-at-point";
-import {
-  dependencies,
-  DependenciesParams,
-} from "./operations/phase9/dependencies";
-import { build, BuildParams } from "./operations/phase9/build";
-import {
-  evalMultiple,
-  EvalMultipleParams,
-} from "./operations/phase9/eval-multiple";
-import { cancel, CancelParams } from "./operations/phase9/cancel";
-import {
-  capabilities,
-  CapabilitiesParams,
-} from "./operations/phase9/capabilities";
-import { version, VersionParams } from "./operations/phase9/version";
-import {
-  loadedModules,
-  LoadedModulesParams,
-} from "./operations/phase9/loaded-modules";
-
-// Import Phase 10 operations
-import {
-  completeContext,
-  CompleteContextParams,
-} from "./operations/phase10/complete-context";
-import {
-  eldocBatch,
-  EldocBatchParams,
-} from "./operations/phase10/eldoc-batch";
-import {
-  indentInfo,
-  IndentInfoParams,
-} from "./operations/phase10/indent-info";
-import {
-  highlightRegions,
-  HighlightRegionsParams,
-} from "./operations/phase10/highlight-regions";
-import {
-  evalAtPoint,
-  EvalAtPointParams,
-} from "./operations/phase10/eval-at-point";
-import {
-  streamEval,
-  StreamEvalParams,
-} from "./operations/phase10/stream-eval";
-import {
-  moduleDoc,
-  ModuleDocParams,
-} from "./operations/phase10/module-doc";
-import {
-  searchDocs,
-  SearchDocsParams,
-} from "./operations/phase10/search-docs";
-import { history, HistoryParams } from "./operations/phase10/history";
+} from "./operations/session-management/session-info";
 import {
   clearSession,
   ClearSessionParams,
-} from "./operations/phase10/clear-session";
-import {
-  moduleInfo,
-  ModuleInfoParams,
-} from "./operations/phase10/module-info";
+} from "./operations/session-management/clear-session";
 
-// Import Phase 11 operations
+// Code Evaluation operations
+import { evalCode, EvalParams } from "./operations/code-evaluation/eval";
 import {
-  listMacros,
-  ListMacrosParams,
-} from "./operations/phase11/list-macros";
+  evalMultiple,
+  EvalMultipleParams,
+} from "./operations/code-evaluation/eval-multiple";
 import {
-  searchHistory,
-  SearchHistoryParams,
-} from "./operations/phase11/search-history";
+  evalAtPoint,
+  EvalAtPointParams,
+} from "./operations/code-evaluation/eval-at-point";
+import {
+  streamEval,
+  StreamEvalParams,
+} from "./operations/code-evaluation/stream-eval";
+import { interrupt } from "./operations/code-evaluation/interrupt";
+import { cancel, CancelParams } from "./operations/code-evaluation/cancel";
+import { loadFile, LoadFileParams } from "./operations/code-evaluation/load-file";
+
+// Code Intelligence operations
+import { complete, CompleteParams } from "./operations/code-intelligence/complete";
+import {
+  completeContext,
+  CompleteContextParams,
+} from "./operations/code-intelligence/complete-context";
+import { signature, SignatureParams } from "./operations/code-intelligence/signature";
+import { eldoc, EldocParams } from "./operations/code-intelligence/eldoc";
+import {
+  eldocBatch,
+  EldocBatchParams,
+} from "./operations/code-intelligence/eldoc-batch";
+import { typeInfo, TypeInfoParams } from "./operations/code-intelligence/type-info";
+import { format, FormatParams } from "./operations/code-intelligence/format";
+import { apropos, AproposParams } from "./operations/code-intelligence/apropos";
+import {
+  indentInfo,
+  IndentInfoParams,
+} from "./operations/code-intelligence/indent-info";
+import {
+  bufferAnalysis,
+  BufferAnalysisParams,
+} from "./operations/code-intelligence/buffer-analysis";
+import {
+  highlightRegions,
+  HighlightRegionsParams,
+} from "./operations/code-intelligence/highlight-regions";
+
+// Navigation operations
+import {
+  findDefinition,
+  FindDefinitionParams,
+} from "./operations/navigation/find-definition";
+import {
+  findReferences,
+  FindReferencesParams,
+} from "./operations/navigation/find-references";
+import {
+  listDefinitions,
+  ListDefinitionsParams,
+} from "./operations/navigation/list-definitions";
+import {
+  symbolAtPoint,
+  SymbolAtPointParams,
+} from "./operations/navigation/symbol-at-point";
+import {
+  workspaceSymbols,
+  WorkspaceSymbolsParams,
+} from "./operations/navigation/workspace-symbols";
+
+// Documentation operations
+import { doc, DocParams } from "./operations/documentation/doc";
+import {
+  moduleDoc,
+  ModuleDocParams,
+} from "./operations/documentation/module-doc";
+import {
+  searchDocs,
+  SearchDocsParams,
+} from "./operations/documentation/search-docs";
 import {
   generateDoc,
   GenerateDocParams,
-} from "./operations/phase11/generate-doc";
+} from "./operations/documentation/generate-doc";
 import {
   moduleSummary,
   ModuleSummaryParams,
-} from "./operations/phase11/module-summary";
+} from "./operations/documentation/module-summary";
+
+// Debugging operations
+import {
+  setBreakpoint,
+  SetBreakpointParams,
+} from "./operations/debugging/set-breakpoint";
+import {
+  clearBreakpoint,
+  ClearBreakpointParams,
+} from "./operations/debugging/clear-breakpoint";
+import { listBreakpoints } from "./operations/debugging/list-breakpoints";
+import { stacktrace, StacktraceParams } from "./operations/debugging/stacktrace";
+import {
+  inspectLocals,
+  InspectLocalsParams,
+} from "./operations/debugging/inspect-locals";
+import {
+  evalInFrame,
+  EvalInFrameParams,
+} from "./operations/debugging/eval-in-frame";
+import { step, StepParams } from "./operations/debugging/step";
+
+// Testing operations
+import { testRun, TestRunParams } from "./operations/testing/test-run";
+import {
+  testCoverage,
+  TestCoverageParams,
+} from "./operations/testing/test-coverage";
+import {
+  testRerunFailures,
+  TestRerunFailuresParams,
+} from "./operations/testing/test-rerun-failures";
+import {
+  generateTests,
+  GenerateTestsParams,
+} from "./operations/testing/generate-tests";
+
+// Refactoring operations
+import {
+  renameSymbol,
+  RenameSymbolParams,
+} from "./operations/refactoring/rename-symbol";
+import {
+  extractFunction,
+  ExtractFunctionParams,
+} from "./operations/refactoring/extract-function";
+import {
+  inlineFunction,
+  InlineFunctionParams,
+} from "./operations/refactoring/inline-function";
+
+// Compilation & Building operations
+import {
+  compileFile,
+  CompileFileParams,
+} from "./operations/compilation-building/compile-file";
+import {
+  compileProject,
+  CompileProjectParams,
+} from "./operations/compilation-building/compile-project";
+import { lint, LintParams } from "./operations/compilation-building/lint";
+import {
+  dependencies,
+  DependenciesParams,
+} from "./operations/compilation-building/dependencies";
+import { build, BuildParams } from "./operations/compilation-building/build";
+
+// BEAM-Specific operations
+import { hotReload, HotReloadParams } from "./operations/beam-specific/hot-reload";
+import {
+  listProcesses,
+  ListProcessesParams,
+} from "./operations/beam-specific/list-processes";
+import {
+  inspectProcess,
+  InspectProcessParams,
+} from "./operations/beam-specific/inspect-process";
+import { traceCalls, TraceCallsParams } from "./operations/beam-specific/trace-calls";
+import { systemInfo, SystemInfoParams } from "./operations/beam-specific/system-info";
+import {
+  observerData,
+  ObserverDataParams,
+} from "./operations/beam-specific/observer-data";
+
+// Status & Introspection operations
+import { describe } from "./operations/status-introspection/describe";
+import {
+  capabilities,
+  CapabilitiesParams,
+} from "./operations/status-introspection/capabilities";
+import { version, VersionParams } from "./operations/status-introspection/version";
+import { ping } from "./operations/status-introspection/ping";
+import {
+  loadedModules,
+  LoadedModulesParams,
+} from "./operations/status-introspection/loaded-modules";
+import {
+  moduleInfo,
+  ModuleInfoParams,
+} from "./operations/status-introspection/module-info";
+import {
+  uploadHistory,
+  UploadHistoryParams,
+} from "./operations/status-introspection/upload-history";
+
+// Advanced Features operations
+import {
+  macroexpand,
+  MacroexpandParams,
+} from "./operations/advanced-features/macroexpand";
+import {
+  macroexpandAll,
+  MacroexpandAllParams,
+} from "./operations/advanced-features/macroexpand-all";
+import {
+  listMacros,
+  ListMacrosParams,
+} from "./operations/advanced-features/list-macros";
+import { history, HistoryParams } from "./operations/advanced-features/history";
+import {
+  searchHistory,
+  SearchHistoryParams,
+} from "./operations/advanced-features/search-history";
+import {
+  profileStart,
+  ProfileStartParams,
+} from "./operations/advanced-features/profile-start";
+import {
+  profileStop,
+  ProfileStopParams,
+} from "./operations/advanced-features/profile-stop";
+import { benchmark, BenchmarkParams } from "./operations/advanced-features/benchmark";
+import { snippets, SnippetsParams } from "./operations/advanced-features/snippets";
 import {
   expandSnippet,
   ExpandSnippetParams,
-} from "./operations/phase11/expand-snippet";
+} from "./operations/advanced-features/expand-snippet";
+import {
+  generateFunction,
+  GenerateFunctionParams,
+} from "./operations/advanced-features/generate-function";
+import {
+  suggestImprovements,
+  SuggestImprovementsParams,
+} from "./operations/advanced-features/suggest-improvements";
+import {
+  shareSession,
+  ShareSessionParams,
+} from "./operations/advanced-features/share-session";
+import {
+  restoreSession,
+  RestoreSessionParams,
+} from "./operations/advanced-features/restore-session";
 import {
   textDocumentDidOpen,
   TextDocumentDidOpenParams,
-} from "./operations/phase11/text-document-did-open";
+} from "./operations/advanced-features/text-document-did-open";
 import {
   textDocumentDidChange,
   TextDocumentDidChangeParams,
-} from "./operations/phase11/text-document-did-change";
+} from "./operations/advanced-features/text-document-did-change";
 import {
   textDocumentDidClose,
   TextDocumentDidCloseParams,
-} from "./operations/phase11/text-document-did-close";
+} from "./operations/advanced-features/text-document-did-close";
 
 // Import types
 import {
@@ -1846,7 +1850,7 @@ export function createClient(
   } catch (error) {
     return err({
       type: "client_creation_error",
-      message: `Failed to create client: ${error}`,
+      message: `Failed to create client: ${error instanceof Error ? error.message : String(error)}`,
     });
   }
 }

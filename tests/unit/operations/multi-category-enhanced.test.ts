@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach } from "@jest/globals";
 import { resetRequestCounter } from "../../../src/utils/id-generator";
-import type { CompleteContextParams } from "../../../src/operations/phase10/complete-context";
-import type { EldocBatchParams } from "../../../src/operations/phase10/eldoc-batch";
-import type { IndentInfoParams } from "../../../src/operations/phase10/indent-info";
-import type { HighlightRegionsParams } from "../../../src/operations/phase10/highlight-regions";
-import type { EvalAtPointParams } from "../../../src/operations/phase10/eval-at-point";
-import type { StreamEvalParams } from "../../../src/operations/phase10/stream-eval";
-import type { ModuleDocParams } from "../../../src/operations/phase10/module-doc";
-import type { SearchDocsParams } from "../../../src/operations/phase10/search-docs";
-import type { HistoryParams } from "../../../src/operations/phase10/history";
-import type { ClearSessionParams } from "../../../src/operations/phase10/clear-session";
-import type { ModuleInfoParams } from "../../../src/operations/phase10/module-info";
+import type { CompleteContextParams } from "../../../src/operations/code-intelligence/complete-context";
+import type { EldocBatchParams } from "../../../src/operations/code-intelligence/eldoc-batch";
+import type { IndentInfoParams } from "../../../src/operations/code-intelligence/indent-info";
+import type { HighlightRegionsParams } from "../../../src/operations/code-intelligence/highlight-regions";
+import type { EvalAtPointParams } from "../../../src/operations/code-evaluation/eval-at-point";
+import type { StreamEvalParams } from "../../../src/operations/code-evaluation/stream-eval";
+import type { ModuleDocParams } from "../../../src/operations/documentation/module-doc";
+import type { SearchDocsParams } from "../../../src/operations/documentation/search-docs";
+import type { HistoryParams } from "../../../src/operations/advanced-features/history";
+import type { ClearSessionParams } from "../../../src/operations/session-management/clear-session";
+import type { ModuleInfoParams } from "../../../src/operations/status-introspection/module-info";
 
-describe("Phase 10: SHOULD HAVE - Enhanced Features", () => {
+describe("Multi-Category Operations (Phase 10)", () => {
   beforeEach(() => {
     resetRequestCounter();
   });

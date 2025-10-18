@@ -1,6 +1,6 @@
 import { generateRequestId, resetRequestCounter } from "../../../src/utils/id-generator";
 
-describe("Phase 2 Operations", () => {
+describe("Code Intelligence Operations", () => {
   beforeEach(() => {
     resetRequestCounter();
   });

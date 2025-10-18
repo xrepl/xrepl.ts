@@ -12,7 +12,7 @@ export function encodeMessage<T>(message: T): Result<Uint8Array, CodecError> {
   } catch (error) {
     return err({
       type: "encoding_error",
-      message: `Failed to encode message: ${error}`,
+      message: `Failed to encode message: ${error instanceof Error ? error.message : String(error)}`,
     });
   }
 }
@@ -27,7 +27,7 @@ export function decodeMessage<T>(data: Uint8Array): Result<T, CodecError> {
   } catch (error) {
     return err({
       type: "decoding_error",
-      message: `Failed to decode message: ${error}`,
+      message: `Failed to decode message: ${error instanceof Error ? error.message : String(error)}`,
     });
   }
 }

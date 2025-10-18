@@ -22,7 +22,7 @@ export interface EvalAtPointParams {
   /** Optional context information */
   context?: {
     buffer_contents?: string;
-    surrounding_forms?: any[];
+    surrounding_forms?: unknown[];
   };
 }
 
