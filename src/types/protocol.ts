@@ -1390,3 +1390,229 @@ export interface LoadedModule {
 export interface LoadedModulesResponse extends BaseResponse {
   modules: LoadedModule[];
 }
+
+// ============================================================================
+// Phase 10: SHOULD HAVE - Enhanced Features
+// ============================================================================
+
+/**
+ * Complete-context operation - context-aware completion
+ */
+export interface CompleteContextRequest extends BaseRequest {
+  op: "complete_context" | "complete-context";
+  session: string;
+  buffer: string;
+  cursor_line: number;
+  cursor_column: number;
+  parse_tree?: any;
+}
+
+export interface CompleteContextResponse extends BaseResponse {
+  candidates: any[]; // Same format as complete
+  context: {
+    in_function_call: boolean;
+    function_name?: string;
+    argument_position?: number;
+    expected_type?: string;
+  };
+}
+
+/**
+ * Eldoc-batch operation - batch eldoc queries
+ */
+export interface EldocBatchRequest extends BaseRequest {
+  op: "eldoc_batch" | "eldoc-batch";
+  session: string;
+  symbols: string[];
+}
+
+export interface EldocBatchResponse extends BaseResponse {
+  results: Record<string, {
+    signature: string;
+    arglists: string[];
+  }>;
+}
+
+/**
+ * Indent-info operation - get indentation information
+ */
+export interface IndentInfoRequest extends BaseRequest {
+  op: "indent_info" | "indent-info";
+  session: string;
+  file: string;
+  line: number;
+  contents: string;
+}
+
+export interface IndentInfoResponse extends BaseResponse {
+  indent: {
+    column: number;
+    reason: string;
+  };
+}
+
+/**
+ * Highlight-regions operation - semantic highlighting
+ */
+export interface HighlightRegionsRequest extends BaseRequest {
+  op: "highlight_regions" | "highlight-regions";
+  session: string;
+  file: string;
+  contents: string;
+}
+
+export interface HighlightRegion {
+  start_line: number;
+  start_column: number;
+  end_line: number;
+  end_column: number;
+  type: string;
+  face: string;
+}
+
+export interface HighlightRegionsResponse extends BaseResponse {
+  regions: HighlightRegion[];
+}
+
+/**
+ * Eval-at-point operation - context-aware evaluation
+ */
+export interface EvalAtPointRequest extends BaseRequest {
+  op: "eval_at_point" | "eval-at-point";
+  session: string;
+  code: string;
+  file: string;
+  line: number;
+  column: number;
+  context?: {
+    buffer_contents?: string;
+    surrounding_forms?: any[];
+  };
+}
+
+export interface EvalAtPointResponse extends BaseResponse {
+  value?: string;
+  ns?: string;
+  formatted?: string;
+  error?: string;
+  error_type?: string;
+  stacktrace?: StackFrame[];
+  out?: string;
+  err?: string;
+}
+
+/**
+ * Stream-eval operation - streaming evaluation
+ */
+export interface StreamEvalRequest extends BaseRequest {
+  op: "stream_eval" | "eval_stream" | "stream-eval" | "eval-stream";
+  session: string;
+  code: string;
+}
+
+export interface StreamEvalResponse extends BaseResponse {
+  value?: string;
+  output?: string;
+  stream?: "stdout" | "stderr";
+}
+
+/**
+ * Module-doc operation - module documentation
+ */
+export interface ModuleDocRequest extends BaseRequest {
+  op: "module_doc" | "module-doc";
+  session: string;
+  module: string;
+}
+
+export interface ModuleFunctionDoc {
+  name: string;
+  arity: number;
+  doc: string;
+}
+
+export interface ModuleDocResponse extends BaseResponse {
+  module: string;
+  doc: string;
+  exports: ModuleFunctionDoc[];
+  types?: any[];
+  source_url?: string;
+}
+
+/**
+ * Search-docs operation - search documentation
+ */
+export interface SearchDocsRequest extends BaseRequest {
+  op: "search_docs" | "search-docs";
+  session: string;
+  query: string;
+}
+
+export interface DocSearchResult {
+  symbol: string;
+  module: string;
+  doc_snippet: string;
+  relevance: number;
+}
+
+export interface SearchDocsResponse extends BaseResponse {
+  results: DocSearchResult[];
+}
+
+/**
+ * History operation - get evaluation history
+ */
+export interface HistoryRequest extends BaseRequest {
+  op: "history";
+  session: string;
+  limit?: number;
+  offset?: number;
+}
+
+export interface HistoryEntry {
+  index: number;
+  code: string;
+  result: string;
+  timestamp: string;
+}
+
+export interface HistoryResponse extends BaseResponse {
+  history: HistoryEntry[];
+}
+
+/**
+ * Clear-session operation - clear session state
+ */
+export interface ClearSessionRequest extends BaseRequest {
+  op: "clear_session" | "clear-session";
+  session: string;
+}
+
+export interface ClearSessionResponse extends BaseResponse {
+  cleared: boolean;
+}
+
+/**
+ * Module-info operation - detailed module information
+ */
+export interface ModuleInfoRequest extends BaseRequest {
+  op: "module_info" | "module-info";
+  session: string;
+  module: string;
+}
+
+export interface ModuleExport {
+  name: string;
+  arity: number;
+}
+
+export interface ModuleInfoResponse extends BaseResponse {
+  module: {
+    name: string;
+    path: string;
+    exports: ModuleExport[];
+    attributes: Record<string, any>;
+    compile_options: any[];
+    md5: string;
+  };
+}

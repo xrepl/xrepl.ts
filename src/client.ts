@@ -194,6 +194,49 @@ import {
   LoadedModulesParams,
 } from "./operations/phase9/loaded-modules";
 
+// Import Phase 10 operations
+import {
+  completeContext,
+  CompleteContextParams,
+} from "./operations/phase10/complete-context";
+import {
+  eldocBatch,
+  EldocBatchParams,
+} from "./operations/phase10/eldoc-batch";
+import {
+  indentInfo,
+  IndentInfoParams,
+} from "./operations/phase10/indent-info";
+import {
+  highlightRegions,
+  HighlightRegionsParams,
+} from "./operations/phase10/highlight-regions";
+import {
+  evalAtPoint,
+  EvalAtPointParams,
+} from "./operations/phase10/eval-at-point";
+import {
+  streamEval,
+  StreamEvalParams,
+} from "./operations/phase10/stream-eval";
+import {
+  moduleDoc,
+  ModuleDocParams,
+} from "./operations/phase10/module-doc";
+import {
+  searchDocs,
+  SearchDocsParams,
+} from "./operations/phase10/search-docs";
+import { history, HistoryParams } from "./operations/phase10/history";
+import {
+  clearSession,
+  ClearSessionParams,
+} from "./operations/phase10/clear-session";
+import {
+  moduleInfo,
+  ModuleInfoParams,
+} from "./operations/phase10/module-info";
+
 // Import types
 import {
   EvalResponse,
@@ -260,6 +303,17 @@ import {
   CapabilitiesResponse,
   VersionResponse,
   LoadedModulesResponse,
+  CompleteContextResponse,
+  EldocBatchResponse,
+  IndentInfoResponse,
+  HighlightRegionsResponse,
+  EvalAtPointResponse,
+  StreamEvalResponse,
+  ModuleDocResponse,
+  SearchDocsResponse,
+  HistoryResponse,
+  ClearSessionResponse,
+  ModuleInfoResponse,
 } from "./types/protocol";
 
 /**
@@ -470,6 +524,41 @@ export interface XReplClient {
   loadedModules(
     params: LoadedModulesParams
   ): Promise<Result<LoadedModulesResponse, OperationError>>;
+
+  // Phase 10: SHOULD HAVE - Enhanced Features
+  completeContext(
+    params: CompleteContextParams
+  ): Promise<Result<CompleteContextResponse, OperationError>>;
+  eldocBatch(
+    params: EldocBatchParams
+  ): Promise<Result<EldocBatchResponse, OperationError>>;
+  indentInfo(
+    params: IndentInfoParams
+  ): Promise<Result<IndentInfoResponse, OperationError>>;
+  highlightRegions(
+    params: HighlightRegionsParams
+  ): Promise<Result<HighlightRegionsResponse, OperationError>>;
+  evalAtPoint(
+    params: EvalAtPointParams
+  ): Promise<Result<EvalAtPointResponse, OperationError>>;
+  streamEval(
+    params: StreamEvalParams
+  ): Promise<Result<StreamEvalResponse, OperationError>>;
+  moduleDoc(
+    params: ModuleDocParams
+  ): Promise<Result<ModuleDocResponse, OperationError>>;
+  searchDocs(
+    params: SearchDocsParams
+  ): Promise<Result<SearchDocsResponse, OperationError>>;
+  history(
+    params: HistoryParams
+  ): Promise<Result<HistoryResponse, OperationError>>;
+  clearSession(
+    params: ClearSessionParams
+  ): Promise<Result<ClearSessionResponse, OperationError>>;
+  moduleInfo(
+    params: ModuleInfoParams
+  ): Promise<Result<ModuleInfoResponse, OperationError>>;
 }
 
 /**
@@ -1416,6 +1505,161 @@ export function createClient(
           });
         }
         return loadedModules(connectionManager, session, params, token);
+      },
+
+      // Phase 10: SHOULD HAVE - Enhanced Features
+      async completeContext(
+        params: CompleteContextParams
+      ): Promise<Result<CompleteContextResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "complete-context",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return completeContext(connectionManager, session, params, token);
+      },
+
+      async eldocBatch(
+        params: EldocBatchParams
+      ): Promise<Result<EldocBatchResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "eldoc-batch",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return eldocBatch(connectionManager, session, params, token);
+      },
+
+      async indentInfo(
+        params: IndentInfoParams
+      ): Promise<Result<IndentInfoResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "indent-info",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return indentInfo(connectionManager, session, params, token);
+      },
+
+      async highlightRegions(
+        params: HighlightRegionsParams
+      ): Promise<Result<HighlightRegionsResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "highlight-regions",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return highlightRegions(connectionManager, session, params, token);
+      },
+
+      async evalAtPoint(
+        params: EvalAtPointParams
+      ): Promise<Result<EvalAtPointResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "eval-at-point",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return evalAtPoint(connectionManager, session, params, token);
+      },
+
+      async streamEval(
+        params: StreamEvalParams
+      ): Promise<Result<StreamEvalResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "stream-eval",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return streamEval(connectionManager, session, params, token);
+      },
+
+      async moduleDoc(
+        params: ModuleDocParams
+      ): Promise<Result<ModuleDocResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "module-doc",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return moduleDoc(connectionManager, session, params, token);
+      },
+
+      async searchDocs(
+        params: SearchDocsParams
+      ): Promise<Result<SearchDocsResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "search-docs",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return searchDocs(connectionManager, session, params, token);
+      },
+
+      async history(
+        params: HistoryParams
+      ): Promise<Result<HistoryResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "history",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return history(connectionManager, session, params, token);
+      },
+
+      async clearSession(
+        params: ClearSessionParams
+      ): Promise<Result<ClearSessionResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "clear-session",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return clearSession(connectionManager, session, params, token);
+      },
+
+      async moduleInfo(
+        params: ModuleInfoParams
+      ): Promise<Result<ModuleInfoResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "module-info",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return moduleInfo(connectionManager, session, params, token);
       },
     });
   } catch (error) {

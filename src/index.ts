@@ -100,3 +100,16 @@ export type { CancelParams } from "./operations/phase9/cancel";
 export type { CapabilitiesParams } from "./operations/phase9/capabilities";
 export type { VersionParams } from "./operations/phase9/version";
 export type { LoadedModulesParams } from "./operations/phase9/loaded-modules";
+
+// Operation parameter types - Phase 10
+export type { CompleteContextParams } from "./operations/phase10/complete-context";
+export type { EldocBatchParams } from "./operations/phase10/eldoc-batch";
+export type { IndentInfoParams } from "./operations/phase10/indent-info";
+export type { HighlightRegionsParams } from "./operations/phase10/highlight-regions";
+export type { EvalAtPointParams } from "./operations/phase10/eval-at-point";
+export type { StreamEvalParams } from "./operations/phase10/stream-eval";
+export type { ModuleDocParams } from "./operations/phase10/module-doc";
+export type { SearchDocsParams } from "./operations/phase10/search-docs";
+export type { HistoryParams } from "./operations/phase10/history";
+export type { ClearSessionParams } from "./operations/phase10/clear-session";
+export type { ModuleInfoParams } from "./operations/phase10/module-info";
