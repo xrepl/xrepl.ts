@@ -50,6 +50,27 @@ import {
   BufferAnalysisParams,
 } from "./operations/phase3/buffer-analysis";
 
+// Import Phase 5 operations
+import {
+  setBreakpoint,
+  SetBreakpointParams,
+} from "./operations/phase5/set-breakpoint";
+import {
+  clearBreakpoint,
+  ClearBreakpointParams,
+} from "./operations/phase5/clear-breakpoint";
+import { listBreakpoints } from "./operations/phase5/list-breakpoints";
+import { stacktrace, StacktraceParams } from "./operations/phase5/stacktrace";
+import { step, StepParams } from "./operations/phase5/step";
+import {
+  inspectLocals,
+  InspectLocalsParams,
+} from "./operations/phase5/inspect-locals";
+import {
+  evalInFrame,
+  EvalInFrameParams,
+} from "./operations/phase5/eval-in-frame";
+
 // Import types
 import {
   EvalResponse,
@@ -72,6 +93,13 @@ import {
   CompileProjectResponse,
   LintResponse,
   BufferAnalysisResponse,
+  SetBreakpointResponse,
+  ClearBreakpointResponse,
+  ListBreakpointsResponse,
+  StacktraceResponse,
+  StepResponse,
+  InspectLocalsResponse,
+  EvalInFrameResponse,
 } from "./types/protocol";
 
 /**
@@ -144,6 +172,25 @@ export interface XReplClient {
   bufferAnalysis(
     params: BufferAnalysisParams
   ): Promise<Result<BufferAnalysisResponse, OperationError>>;
+
+  // Phase 5: Debugging operations
+  setBreakpoint(
+    params: SetBreakpointParams
+  ): Promise<Result<SetBreakpointResponse, OperationError>>;
+  clearBreakpoint(
+    params: ClearBreakpointParams
+  ): Promise<Result<ClearBreakpointResponse, OperationError>>;
+  listBreakpoints(): Promise<Result<ListBreakpointsResponse, OperationError>>;
+  stacktrace(
+    params: StacktraceParams
+  ): Promise<Result<StacktraceResponse, OperationError>>;
+  step(params: StepParams): Promise<Result<StepResponse, OperationError>>;
+  inspectLocals(
+    params: InspectLocalsParams
+  ): Promise<Result<InspectLocalsResponse, OperationError>>;
+  evalInFrame(
+    params: EvalInFrameParams
+  ): Promise<Result<EvalInFrameResponse, OperationError>>;
 }
 
 /**
@@ -490,6 +537,105 @@ export function createClient(
           });
         }
         return bufferAnalysis(connectionManager, session, params, token);
+      },
+
+      // Phase 5: Debugging operations
+      async setBreakpoint(
+        params: SetBreakpointParams
+      ): Promise<Result<SetBreakpointResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "set-breakpoint",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return setBreakpoint(connectionManager, session, params, token);
+      },
+
+      async clearBreakpoint(
+        params: ClearBreakpointParams
+      ): Promise<Result<ClearBreakpointResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "clear-breakpoint",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return clearBreakpoint(connectionManager, session, params, token);
+      },
+
+      async listBreakpoints(): Promise<
+        Result<ListBreakpointsResponse, OperationError>
+      > {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "list-breakpoints",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return listBreakpoints(connectionManager, session, token);
+      },
+
+      async stacktrace(
+        params: StacktraceParams
+      ): Promise<Result<StacktraceResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "stacktrace",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return stacktrace(connectionManager, session, params, token);
+      },
+
+      async step(
+        params: StepParams
+      ): Promise<Result<StepResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "step",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return step(connectionManager, session, params, token);
+      },
+
+      async inspectLocals(
+        params: InspectLocalsParams
+      ): Promise<Result<InspectLocalsResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "inspect-locals",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return inspectLocals(connectionManager, session, params, token);
+      },
+
+      async evalInFrame(
+        params: EvalInFrameParams
+      ): Promise<Result<EvalInFrameResponse, OperationError>> {
+        const session = sessionTracker.getActiveSession();
+        if (!session) {
+          return err({
+            type: "operation_error",
+            operation: "eval-in-frame",
+            message: "No active session. Use clone() to create a new session.",
+          });
+        }
+        return evalInFrame(connectionManager, session, params, token);
       },
     });
   } catch (error) {

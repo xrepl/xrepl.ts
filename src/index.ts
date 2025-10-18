@@ -47,3 +47,11 @@ export type { CompileFileParams } from "./operations/phase3/compile-file";
 export type { CompileProjectParams } from "./operations/phase3/compile-project";
 export type { LintParams } from "./operations/phase3/lint";
 export type { BufferAnalysisParams } from "./operations/phase3/buffer-analysis";
+
+// Operation parameter types - Phase 5
+export type { SetBreakpointParams } from "./operations/phase5/set-breakpoint";
+export type { ClearBreakpointParams } from "./operations/phase5/clear-breakpoint";
+export type { StacktraceParams } from "./operations/phase5/stacktrace";
+export type { StepParams } from "./operations/phase5/step";
+export type { InspectLocalsParams } from "./operations/phase5/inspect-locals";
+export type { EvalInFrameParams } from "./operations/phase5/eval-in-frame";

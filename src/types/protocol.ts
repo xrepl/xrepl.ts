@@ -450,4 +450,124 @@ export interface BufferAnalysisResponse extends BaseResponse {
   }>;
 }
 
-// Additional operation types will be added for phases 4-7 as needed
+// ============================================================================
+// Phase 5: Debugging Operations
+// ============================================================================
+
+/**
+ * Set-breakpoint operation - set a breakpoint in code
+ */
+export interface SetBreakpointRequest extends BaseRequest {
+  op: "set-breakpoint" | "set_breakpoint";
+  session: string;
+  file: string;
+  line: number;
+  column?: number;
+  condition?: string; // Optional: break only if condition is true
+}
+
+export interface Breakpoint {
+  id: string;
+  file: string;
+  line: number;
+  column?: number;
+  condition?: string;
+  enabled: boolean;
+}
+
+export interface SetBreakpointResponse extends BaseResponse {
+  breakpoint_id: string;
+  breakpoint: Breakpoint;
+}
+
+/**
+ * Clear-breakpoint operation - clear/remove a breakpoint
+ */
+export interface ClearBreakpointRequest extends BaseRequest {
+  op: "clear-breakpoint" | "clear_breakpoint";
+  session: string;
+  breakpoint_id: string;
+}
+
+export interface ClearBreakpointResponse extends BaseResponse {
+  cleared: boolean;
+}
+
+/**
+ * List-breakpoints operation - list all active breakpoints
+ */
+export interface ListBreakpointsRequest extends BaseRequest {
+  op: "list-breakpoints" | "list_breakpoints";
+  session: string;
+}
+
+export interface ListBreakpointsResponse extends BaseResponse {
+  breakpoints: Breakpoint[];
+}
+
+/**
+ * Stacktrace operation - get current stack trace
+ */
+export interface StacktraceRequest extends BaseRequest {
+  op: "stacktrace";
+  session: string;
+  thread_id?: string;
+}
+
+export interface StacktraceResponse extends BaseResponse {
+  frames: StackFrame[];
+}
+
+/**
+ * Step operation - step through code execution
+ */
+export interface StepRequest extends BaseRequest {
+  op: "step";
+  session: string;
+  type: "into" | "over" | "out"; // step into, step over, step out
+  count?: number; // Number of steps (default: 1)
+}
+
+export interface StepResponse extends BaseResponse {
+  current_frame?: StackFrame;
+  stopped_at?: Location;
+}
+
+/**
+ * Inspect-locals operation - inspect local variables in current frame
+ */
+export interface InspectLocalsRequest extends BaseRequest {
+  op: "inspect-locals" | "inspect_locals";
+  session: string;
+  frame_id?: number; // Optional: specific frame to inspect (default: current)
+}
+
+export interface LocalVariable {
+  name: string;
+  value: string;
+  type?: string;
+}
+
+export interface InspectLocalsResponse extends BaseResponse {
+  locals: LocalVariable[];
+  frame_id?: number;
+}
+
+/**
+ * Eval-in-frame operation - evaluate expression in specific stack frame
+ */
+export interface EvalInFrameRequest extends BaseRequest {
+  op: "eval-in-frame" | "eval_in_frame";
+  session: string;
+  code: string;
+  frame_id?: number; // Optional: specific frame (default: current)
+}
+
+export interface EvalInFrameResponse extends BaseResponse {
+  value?: string;
+  error?: string;
+  error_type?: string;
+  frame_id?: number;
+}
+
+// Additional operation types will be added for phases 6-8 as needed

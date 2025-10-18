@@ -32,6 +32,14 @@ TypeScript client library for the xREPL protocol, enabling communication with LF
   - `compile-project` - Compile entire projects
   - `lint` - Lint code without compilation
   - `buffer-analysis` - Analyze code buffers
+- ✅ **Phase 5 Operations**: All debugging operations implemented
+  - `set-breakpoint` - Set breakpoints in code
+  - `clear-breakpoint` - Clear/remove breakpoints
+  - `list-breakpoints` - List all active breakpoints
+  - `stacktrace` - Get current stack trace
+  - `step` - Step through code execution (into/over/out)
+  - `inspect-locals` - Inspect local variables
+  - `eval-in-frame` - Evaluate expressions in stack frames
 
 ## Installation
 
@@ -387,6 +395,148 @@ result.map(response => {
 });
 ```
 
+### Debugging Operations
+
+#### `setBreakpoint(params: SetBreakpointParams): Promise<Result<SetBreakpointResponse, OperationError>>`
+
+Set a breakpoint in code.
+
+**Example:**
+```typescript
+const result = await client.setBreakpoint({
+  file: "/path/to/file.lfe",
+  line: 42,
+  condition: "(> x 100)"  // optional
+});
+
+result.map(response => {
+  console.log(`Breakpoint set: ${response.breakpoint_id}`);
+  console.log(`Location: ${response.breakpoint.file}:${response.breakpoint.line}`);
+});
+```
+
+#### `clearBreakpoint(params: ClearBreakpointParams): Promise<Result<ClearBreakpointResponse, OperationError>>`
+
+Clear/remove a breakpoint.
+
+**Example:**
+```typescript
+const result = await client.clearBreakpoint({
+  breakpoint_id: "bp-001"
+});
+
+result.map(response => {
+  if (response.cleared) {
+    console.log("Breakpoint cleared");
+  }
+});
+```
+
+#### `listBreakpoints(): Promise<Result<ListBreakpointsResponse, OperationError>>`
+
+List all active breakpoints.
+
+**Example:**
+```typescript
+const result = await client.listBreakpoints();
+
+result.map(response => {
+  console.log(`Active breakpoints: ${response.breakpoints.length}`);
+  response.breakpoints.forEach(bp => {
+    console.log(`  ${bp.id}: ${bp.file}:${bp.line}`);
+  });
+});
+```
+
+#### `stacktrace(params: StacktraceParams): Promise<Result<StacktraceResponse, OperationError>>`
+
+Get current stack trace.
+
+**Example:**
+```typescript
+const result = await client.stacktrace({
+  thread_id: "main"  // optional
+});
+
+result.map(response => {
+  console.log("Stack trace:");
+  response.frames.forEach((frame, i) => {
+    console.log(`  ${i}: ${frame.module}:${frame.function}/${frame.arity}`);
+    console.log(`     ${frame.file}:${frame.line}`);
+  });
+});
+```
+
+#### `step(params: StepParams): Promise<Result<StepResponse, OperationError>>`
+
+Step through code execution.
+
+**Example:**
+```typescript
+// Step into function
+const result = await client.step({
+  type: "into"
+});
+
+// Step over 3 lines
+const result = await client.step({
+  type: "over",
+  count: 3
+});
+
+result.map(response => {
+  if (response.stopped_at) {
+    console.log(`Stopped at: ${response.stopped_at.file}:${response.stopped_at.line}`);
+  }
+});
+```
+
+#### `inspectLocals(params: InspectLocalsParams): Promise<Result<InspectLocalsResponse, OperationError>>`
+
+Inspect local variables in current or specific stack frame.
+
+**Example:**
+```typescript
+// Inspect current frame
+const result = await client.inspectLocals({});
+
+// Inspect specific frame
+const result = await client.inspectLocals({
+  frame_id: 2
+});
+
+result.map(response => {
+  console.log("Local variables:");
+  response.locals.forEach(local => {
+    console.log(`  ${local.name} = ${local.value}`);
+  });
+});
+```
+
+#### `evalInFrame(params: EvalInFrameParams): Promise<Result<EvalInFrameResponse, OperationError>>`
+
+Evaluate expression in specific stack frame.
+
+**Example:**
+```typescript
+// Eval in current frame
+const result = await client.evalInFrame({
+  code: "x"
+});
+
+// Eval in specific frame
+const result = await client.evalInFrame({
+  code: "(+ x 10)",
+  frame_id: 2
+});
+
+result.map(response => {
+  if (response.value) {
+    console.log(`Result: ${response.value}`);
+  }
+});
+```
+
 ## Error Handling
 
 This library uses the `neverthrow` library for type-safe error handling. All operations return `Result<T, E>` types instead of throwing exceptions.
@@ -491,10 +641,11 @@ The library follows a functional, type-safe design:
 - ✅ Phase 1: Core REPL operations
 - ✅ Phase 2: Code Intelligence (completion, signature help, documentation)
 - ✅ Phase 3: Compilation & Building (compile, lint, analysis)
-- ⏳ Phase 4: Debugging
-- ⏳ Phase 5: Testing & Refactoring
-- ⏳ Phase 6: BEAM-Specific features
-- ⏳ Phase 7: Advanced features
+- ✅ Phase 4: CI/CD
+- ✅ Phase 5: Debugging (breakpoints, stepping, inspection)
+- ⏳ Phase 6: Testing & Refactoring
+- ⏳ Phase 7: BEAM-Specific features
+- ⏳ Phase 8: Advanced features
 
 ## Contributing
 

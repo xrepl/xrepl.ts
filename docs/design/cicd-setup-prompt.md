@@ -34,6 +34,7 @@ Create or update `tsconfig.json` with best practices for a library package:
 - Include proper module resolution
 
 Create a build script that:
+
 - Cleans the dist directory before building
 - Compiles TypeScript to JavaScript
 - Generates type declarations
@@ -44,6 +45,7 @@ Create a build script that:
 Update `package.json` with:
 
 **Publishing Configuration**:
+
 ```json
 {
   "name": "@xrepl/client",
@@ -71,6 +73,7 @@ Update `package.json` with:
 ```
 
 **Scripts** (at minimum):
+
 - `build`: Clean and compile TypeScript
 - `test`: Run all tests
 - `lint`: Run ESLint
@@ -82,6 +85,7 @@ Update `package.json` with:
 **File**: `.github/workflows/version-check.yml`
 
 This workflow should:
+
 - Trigger on pull requests to `main` branch
 - Check out the code
 - Compare `package.json` version in PR against `main` branch
@@ -90,6 +94,7 @@ This workflow should:
 - Validate that the version follows semantic versioning format (X.Y.Z)
 
 **Requirements**:
+
 - Use `actions/checkout@v4` with fetch-depth: 0 to get full history
 - Compare semantic versions properly (not just string comparison)
 - Account for major, minor, and patch version bumps
@@ -97,14 +102,16 @@ This workflow should:
 
 ### 4. GitHub Actions Workflow: CI/CD Pipeline
 
-**File**: `.github/workflows/publish.yml`
+**File**: `.github/workflows/cicd.yml`
 
 This workflow should trigger on:
+
 - Push to `main` branch (after PR merge)
 
 **Jobs Structure**:
 
 #### Job 1: Quality Checks
+
 - **Matrix Strategy**: Test against multiple Node.js versions
   - Use Node.js LTS versions: 18.x, 20.x, 22.x
   - Use `actions/setup-node@v4`
@@ -118,22 +125,24 @@ This workflow should trigger on:
   7. Build the package (`npm run build`)
 
 #### Job 2: Publish to NPM
+
 - **Depends on**: Quality Checks job must pass
 - **Runs on**: ubuntu-latest, Node.js 20.x (LTS)
 - **Steps**:
   1. Checkout code
-  2. Setup Node.js with registry-url: 'https://registry.npmjs.org'
+  2. Setup Node.js with registry-url: '<https://registry.npmjs.org>'
   3. Install dependencies
   4. Build the package
   5. Publish to NPM using `npm publish`
   6. Use `NODE_AUTH_TOKEN` secret for authentication
 
 #### Job 3: Publish to GitHub Packages
+
 - **Depends on**: Quality Checks job must pass
 - **Runs on**: ubuntu-latest, Node.js 20.x (LTS)
 - **Steps**:
   1. Checkout code
-  2. Setup Node.js with registry-url: 'https://npm.pkg.github.com'
+  2. Setup Node.js with registry-url: '<https://npm.pkg.github.com>'
   3. Install dependencies
   4. Build the package
   5. Update package.json to use GitHub Packages registry in publishConfig
@@ -141,6 +150,7 @@ This workflow should trigger on:
   7. Use `GITHUB_TOKEN` secret for authentication
 
 **Important Considerations**:
+
 - Use `npm ci` instead of `npm install` for reproducible builds
 - Cache npm dependencies for faster builds
 - Set appropriate permissions for GITHUB_TOKEN
@@ -150,6 +160,7 @@ This workflow should trigger on:
 ### 5. .gitignore Configuration
 
 Ensure `.gitignore` includes:
+
 ```
 node_modules/
 dist/
@@ -163,6 +174,7 @@ coverage/
 ### 6. .npmignore Configuration
 
 Create `.npmignore` to exclude unnecessary files from published package:
+
 ```
 src/
 tests/
@@ -183,7 +195,8 @@ Create `SETUP.md` with detailed instructions:
 #### Required GitHub Secrets
 
 **For NPM Publishing**:
-1. Go to https://www.npmjs.com
+
+1. Go to <https://www.npmjs.com>
 2. Log in to your account
 3. Click on your profile → Access Tokens
 4. Generate New Token → Classic Token
@@ -196,9 +209,11 @@ Create `SETUP.md` with detailed instructions:
 11. Save
 
 **For GitHub Packages**:
+
 - `GITHUB_TOKEN` is automatically available in GitHub Actions
 - Ensure the token has `packages:write` permission
 - No manual setup required, but verify in workflow with:
+
   ```yaml
   permissions:
     contents: read
@@ -208,16 +223,18 @@ Create `SETUP.md` with detailed instructions:
 #### Repository Configuration for GitHub Packages
 
 1. Ensure package.json has correct repository field:
+
 ```json
 {
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xrepl/client.git"
+    "url": "git+https://github.com/xrepl/xrepl.ts.git"
   }
 }
 ```
 
 2. For users to install from GitHub Packages, they need `.npmrc`:
+
 ```
 @xrepl:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
@@ -250,6 +267,7 @@ Include a testing checklist in SETUP.md:
 ### Error Handling
 
 Workflows should fail fast and provide clear error messages:
+
 - "Version not bumped. Please increment version in package.json"
 - "Tests failed. Please fix failing tests before merging"
 - "Type check failed. Please fix TypeScript errors"
@@ -258,6 +276,7 @@ Workflows should fail fast and provide clear error messages:
 ### Validation Rules
 
 Version check should validate:
+
 - Version format is valid semver (X.Y.Z)
 - Version is greater than main branch version
 - At least one version component has been incremented
